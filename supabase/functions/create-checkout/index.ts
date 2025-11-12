@@ -45,47 +45,25 @@ Deno.serve(async (req: Request) => {
       throw new Error('Missing required fields');
     }
 
-    let donor;
-    const { data: existingDonor } = await supabase
+    const { data: donor, error: donorError } = await supabase
       .from('donors')
-      .select('id')
-      .eq('email', email)
-      .maybeSingle();
+      .upsert({
+        email,
+        first_name: firstName,
+        last_name: lastName,
+        phone,
+        organization,
+        referral_source: referralSource,
+        referral_custom: referralCustom,
+        updated_at: new Date().toISOString(),
+      }, {
+        onConflict: 'email',
+        ignoreDuplicates: false,
+      })
+      .select()
+      .single();
 
-    if (existingDonor) {
-      const { data: updatedDonor } = await supabase
-        .from('donors')
-        .update({
-          first_name: firstName,
-          last_name: lastName,
-          phone: phone,
-          organization: organization,
-          referral_source: referralSource,
-          referral_custom: referralCustom,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', existingDonor.id)
-        .select()
-        .single();
-      donor = updatedDonor;
-    } else {
-      const { data: newDonor } = await supabase
-        .from('donors')
-        .insert({
-          email,
-          first_name: firstName,
-          last_name: lastName,
-          phone,
-          organization,
-          referral_source: referralSource,
-          referral_custom: referralCustom,
-        })
-        .select()
-        .single();
-      donor = newDonor;
-    }
-
-    if (!donor) {
+    if (!donor || donorError) {
       throw new Error('Failed to create or update donor');
     }
 

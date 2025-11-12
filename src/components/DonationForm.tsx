@@ -44,12 +44,35 @@ export default function DonationForm() {
   const goalAmount = 250000;
   const progressPercentage = (currentAmount / goalAmount) * 100;
 
+  const formatPhoneNumber = (value: string) => {
+    const cleaned = value.replace(/\D/g, '');
+    const limited = cleaned.slice(0, 10);
+
+    if (limited.length <= 3) {
+      return limited;
+    } else if (limited.length <= 6) {
+      return `(${limited.slice(0, 3)}) ${limited.slice(3)}`;
+    } else {
+      return `(${limited.slice(0, 3)}) ${limited.slice(3, 6)}-${limited.slice(6)}`;
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+
+    if (name === 'phone') {
+      const formatted = formatPhoneNumber(value);
+      setFormData({
+        ...formData,
+        phone: formatted,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+
     setError(null);
 
     if (name === 'referralSource' && value !== 'Other') {
@@ -79,6 +102,13 @@ export default function DonationForm() {
     if (!emailRegex.test(formData.email)) {
       setError('Please enter a valid email address');
       return false;
+    }
+    if (formData.phone) {
+      const cleaned = formData.phone.replace(/\D/g, '');
+      if (cleaned.length !== 10) {
+        setError('Please enter a valid 10-digit US phone number');
+        return false;
+      }
     }
     return true;
   };
