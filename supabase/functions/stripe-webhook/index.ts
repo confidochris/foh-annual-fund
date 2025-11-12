@@ -58,6 +58,10 @@ Deno.serve(async (req: Request) => {
         const session = event.data.object as Stripe.Checkout.Session;
         const donationId = session.metadata?.donation_id;
 
+        console.log('Session metadata:', session.metadata);
+        console.log('Donation ID:', donationId);
+        console.log('Session ID:', session.id);
+
         if (!donationId) {
           console.error('No donation_id in session metadata');
           break;
@@ -77,10 +81,19 @@ Deno.serve(async (req: Request) => {
           updateData.stripe_subscription_id = session.subscription as string;
         }
 
-        await supabase
+        console.log('Updating donation with data:', updateData);
+
+        const { data: updatedDonation, error: updateError } = await supabase
           .from('donations')
           .update(updateData)
-          .eq('id', donationId);
+          .eq('id', donationId)
+          .select();
+
+        if (updateError) {
+          console.error('Error updating donation:', updateError);
+        } else {
+          console.log('Successfully updated donation:', updatedDonation);
+        }
 
         await supabase
           .from('donation_events')
