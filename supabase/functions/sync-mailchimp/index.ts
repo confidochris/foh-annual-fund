@@ -10,7 +10,9 @@ const corsHeaders = {
 
 interface SyncRequest {
   donorId: string;
+  donationId?: string;
   tags?: string[];
+  sendEmail?: boolean;
 }
 
 Deno.serve(async (req: Request) => {
@@ -34,7 +36,7 @@ Deno.serve(async (req: Request) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const { donorId, tags = [] }: SyncRequest = await req.json();
+    const { donorId, donationId, tags = [], sendEmail = false }: SyncRequest = await req.json();
 
     if (!donorId) {
       throw new Error('donorId is required');
@@ -48,6 +50,16 @@ Deno.serve(async (req: Request) => {
 
     if (donorError || !donor) {
       throw new Error('Donor not found');
+    }
+
+    let donation = null;
+    if (donationId) {
+      const { data: donationData } = await supabase
+        .from('donations')
+        .select('*')
+        .eq('id', donationId)
+        .single();
+      donation = donationData;
     }
 
     const subscriberHash = crypto
@@ -94,11 +106,82 @@ Deno.serve(async (req: Request) => {
       })
       .eq('id', donorId);
 
+    let emailResult = null;
+    if (sendEmail && donation) {
+      const mailchimpTemplateId = Deno.env.get('MAILCHIMP_TEMPLATE_ID');
+
+      if (!mailchimpTemplateId) {
+        console.warn('MAILCHIMP_TEMPLATE_ID not set, skipping email send');
+      } else {
+        const emailPayload = {
+          message: {
+            subject: 'Thank you for your donation',
+            from_email: 'noreply@yourdomain.com',
+            from_name: 'Your Organization',
+            to: [
+              {
+                email: donor.email,
+                name: `${donor.first_name} ${donor.last_name}`,
+                type: 'to',
+              },
+            ],
+            global_merge_vars: [
+              {
+                name: 'FNAME',
+                content: donor.first_name || '',
+              },
+              {
+                name: 'LNAME',
+                content: donor.last_name || '',
+              },
+              {
+                name: 'AMOUNT',
+                content: (donation.amount / 100).toFixed(2),
+              },
+              {
+                name: 'DONATION_TYPE',
+                content: donation.donation_type || 'one-time',
+              },
+              {
+                name: 'DATE',
+                content: new Date(donation.completed_at || donation.created_at).toLocaleDateString(),
+              },
+            ],
+          },
+        };
+
+        const mandrillUrl = `https://mandrillapp.com/api/1.0/messages/send-template`;
+
+        const mandrillResponse = await fetch(mandrillUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            key: mailchimpApiKey,
+            template_name: mailchimpTemplateId,
+            template_content: [],
+            ...emailPayload,
+          }),
+        });
+
+        emailResult = await mandrillResponse.json();
+
+        if (!mandrillResponse.ok) {
+          console.error('Mandrill error:', emailResult);
+        } else {
+          console.log('Email sent successfully:', emailResult);
+        }
+      }
+    }
+
     return new Response(
-      JSON.stringify({ 
-        success: true, 
+      JSON.stringify({
+        success: true,
         mailchimp_id: mailchimpResult.id,
         mailchimp_status: mailchimpResult.status,
+        email_sent: !!emailResult,
+        email_result: emailResult,
       }),
       {
         headers: {

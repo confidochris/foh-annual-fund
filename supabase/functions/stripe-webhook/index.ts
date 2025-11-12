@@ -97,7 +97,9 @@ Deno.serve(async (req: Request) => {
                 },
                 body: JSON.stringify({
                   donorId: donorId,
+                  donationId: donationId,
                   tags: ['donation_completed'],
+                  sendEmail: true,
                 }),
               }
             );
