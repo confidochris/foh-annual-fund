@@ -135,7 +135,7 @@ Deno.serve(async (req: Request) => {
         },
       ],
       mode: donationType === 'recurring' ? 'subscription' : 'payment',
-      success_url: `${req.headers.get('origin')}/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: 'https://www.walkforhope.com',
       cancel_url: `${req.headers.get('origin')}/?cancelled=true`,
       customer_email: email,
       metadata: {
