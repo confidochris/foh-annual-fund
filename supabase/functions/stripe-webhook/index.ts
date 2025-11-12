@@ -84,37 +84,6 @@ Deno.serve(async (req: Request) => {
             source: 'stripe-webhook',
           });
 
-        const donorId = session.metadata?.donor_id;
-        if (donorId) {
-          try {
-            const mailchimpResponse = await fetch(
-              `${supabaseUrl}/functions/v1/sync-mailchimp`,
-              {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${supabaseKey}`,
-                },
-                body: JSON.stringify({
-                  donorId: donorId,
-                  donationId: donationId,
-                  tags: ['donation_completed'],
-                  sendEmail: true,
-                }),
-              }
-            );
-
-            if (!mailchimpResponse.ok) {
-              const mailchimpError = await mailchimpResponse.json();
-              console.error('Mailchimp sync failed:', mailchimpError);
-            } else {
-              console.log('Donor synced to Mailchimp successfully');
-            }
-          } catch (mailchimpError) {
-            console.error('Error calling Mailchimp sync:', mailchimpError);
-          }
-        }
-
         break;
       }
 
