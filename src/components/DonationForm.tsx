@@ -131,17 +131,10 @@ export default function DonationForm() {
         throw new Error(data.error || 'Failed to create checkout session');
       }
 
-      const stripe = await stripePromise;
-      if (!stripe) {
-        throw new Error('Stripe failed to load');
-      }
-
-      const { error: stripeError } = await stripe.redirectToCheckout({
-        sessionId: data.sessionId,
-      });
-
-      if (stripeError) {
-        throw new Error(stripeError.message);
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL returned');
       }
     } catch (err) {
       console.error('Donation error:', err);
