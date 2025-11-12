@@ -1,10 +1,11 @@
-import { ArrowRight, Heart, CheckCircle, Loader2 } from 'lucide-react';
+import { ArrowRight, Heart, CheckCircle, Loader2, ChevronLeft } from 'lucide-react';
 import { useState, FormEvent } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
 
 export default function DonationForm() {
+  const [currentStep, setCurrentStep] = useState(1);
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
   const [customAmount, setCustomAmount] = useState('');
   const [isCustom, setIsCustom] = useState(false);
@@ -17,6 +18,9 @@ export default function DonationForm() {
     firstName: '',
     lastName: '',
     phone: '',
+    organization: '',
+    referralSource: '',
+    referralCustom: '',
   });
 
   const donationTiers = [
@@ -26,52 +30,74 @@ export default function DonationForm() {
     { amount: 1000, impact: 'Moves us closer to breakthroughs' },
   ];
 
+  const referralOptions = [
+    'Foundation of Hope mailer',
+    'Email from the Foundation of Hope',
+    'Social Media',
+    'Google or online search',
+    'Friend or family member',
+    'News or media coverage',
+    'Other',
+  ];
+
   const currentAmount = 12500;
   const goalAmount = 250000;
   const progressPercentage = (currentAmount / goalAmount) * 100;
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
     setError(null);
+
+    if (name === 'referralSource' && value !== 'Other') {
+      setFormData(prev => ({ ...prev, referralCustom: '' }));
+    }
   };
 
-  const validateForm = () => {
-    if (!formData.email || !formData.firstName || !formData.lastName) {
-      setError('Please fill in all required fields');
-      return false;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setError('Please enter a valid email address');
-      return false;
-    }
-
+  const validateStep1 = () => {
     const amount = isCustom ? parseFloat(customAmount) : selectedAmount;
     if (!amount || amount <= 0) {
       setError('Please select or enter a donation amount');
       return false;
     }
-
     if (amount < 5) {
       setError('Minimum donation amount is $5');
       return false;
     }
-
     return true;
+  };
+
+  const validateStep2 = () => {
+    if (!formData.email || !formData.firstName || !formData.lastName) {
+      setError('Please fill in all required fields');
+      return false;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Please enter a valid email address');
+      return false;
+    }
+    return true;
+  };
+
+  const handleNext = () => {
+    setError(null);
+    if (currentStep === 1 && !validateStep1()) return;
+    if (currentStep === 2 && !validateStep2()) return;
+    setCurrentStep(currentStep + 1);
+  };
+
+  const handleBack = () => {
+    setError(null);
+    setCurrentStep(currentStep - 1);
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
-
-    if (!validateForm()) {
-      return;
-    }
-
     setIsProcessing(true);
 
     try {
@@ -90,6 +116,9 @@ export default function DonationForm() {
             firstName: formData.firstName,
             lastName: formData.lastName,
             phone: formData.phone,
+            organization: formData.organization,
+            referralSource: formData.referralSource,
+            referralCustom: formData.referralCustom,
             amount,
             donationType,
           }),
@@ -123,7 +152,7 @@ export default function DonationForm() {
 
   return (
     <section id="donate" className="py-16 sm:py-20 md:py-24 bg-gradient-to-b from-foh-blue/5 to-white">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-12">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="text-center mb-8 sm:mb-10 md:mb-12">
           <div className="inline-flex items-center gap-2 mb-4">
             <Heart className="w-5 h-5 sm:w-6 sm:h-6 fill-current" style={{ color: '#2BB673' }} />
@@ -139,32 +168,57 @@ export default function DonationForm() {
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-10 md:p-12 mb-8 sm:mb-12">
-          <div className="mb-8 sm:mb-10">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 mb-4">
-              <span className="text-base sm:text-lg font-semibold text-foh-dark-brown">Campaign Progress</span>
-              <span className="text-xl sm:text-2xl font-bold text-foh-light-green">
-                ${currentAmount.toLocaleString()}
-              </span>
-            </div>
-
-            <div className="relative h-3 sm:h-4 bg-gray-200 rounded-full overflow-hidden mb-2">
+        <div className="mb-6 sm:mb-8 flex justify-center items-center gap-2">
+          {[1, 2, 3].map((step) => (
+            <div key={step} className="flex items-center">
               <div
-                className="absolute inset-y-0 left-0 bg-gradient-to-r from-foh-light-green to-foh-mid-green rounded-full transition-all duration-1000 ease-out"
-                style={{ width: `${progressPercentage}%` }}
+                className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 ${
+                  step === currentStep
+                    ? 'bg-foh-light-green text-white scale-110'
+                    : step < currentStep
+                    ? 'bg-foh-mid-green text-white'
+                    : 'bg-gray-200 text-gray-500'
+                }`}
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
+                {step < currentStep ? <CheckCircle className="w-5 h-5" /> : step}
               </div>
+              {step < 3 && (
+                <div
+                  className={`w-12 sm:w-16 h-1 mx-1 rounded transition-all duration-300 ${
+                    step < currentStep ? 'bg-foh-mid-green' : 'bg-gray-200'
+                  }`}
+                />
+              )}
             </div>
+          ))}
+        </div>
 
-            <div className="flex justify-between items-center text-xs sm:text-sm">
-              <span className="text-gray-600">{progressPercentage.toFixed(1)}% of goal</span>
-              <span className="text-gray-600">Goal: ${goalAmount.toLocaleString()}</span>
-            </div>
-          </div>
+        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-10 md:p-12 mb-8 sm:mb-12 min-h-[500px] relative">
+          {currentStep === 1 && (
+            <div className="space-y-6 animate-fadeIn">
+              <div className="mb-8 sm:mb-10">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 mb-4">
+                  <span className="text-base sm:text-lg font-semibold text-foh-dark-brown">Campaign Progress</span>
+                  <span className="text-xl sm:text-2xl font-bold text-foh-light-green">
+                    ${currentAmount.toLocaleString()}
+                  </span>
+                </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-6 mb-8">
+                <div className="relative h-3 sm:h-4 bg-gray-200 rounded-full overflow-hidden mb-2">
+                  <div
+                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-foh-light-green to-foh-mid-green rounded-full transition-all duration-1000 ease-out"
+                    style={{ width: `${progressPercentage}%` }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center text-xs sm:text-sm">
+                  <span className="text-gray-600">{progressPercentage.toFixed(1)}% of goal</span>
+                  <span className="text-gray-600">Goal: ${goalAmount.toLocaleString()}</span>
+                </div>
+              </div>
+
               <div>
                 <label className="block text-base sm:text-lg font-semibold text-foh-dark-brown mb-4">
                   Donation Type
@@ -181,9 +235,7 @@ export default function DonationForm() {
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-semibold text-foh-dark-brown">One-Time</span>
-                      {donationType === 'one_time' && (
-                        <CheckCircle className="w-5 h-5 text-foh-light-green" />
-                      )}
+                      {donationType === 'one_time' && <CheckCircle className="w-5 h-5 text-foh-light-green" />}
                     </div>
                   </button>
                   <button
@@ -197,9 +249,7 @@ export default function DonationForm() {
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-semibold text-foh-dark-brown">Monthly</span>
-                      {donationType === 'recurring' && (
-                        <CheckCircle className="w-5 h-5 text-foh-light-green" />
-                      )}
+                      {donationType === 'recurring' && <CheckCircle className="w-5 h-5 text-foh-light-green" />}
                     </div>
                   </button>
                 </div>
@@ -219,7 +269,7 @@ export default function DonationForm() {
                         setSelectedAmount(tier.amount);
                         setIsCustom(false);
                       }}
-                      className={`group relative p-4 sm:p-5 md:p-6 rounded-lg sm:rounded-xl border-2 transition-all duration-300 min-h-[100px] sm:min-h-[120px] flex flex-col justify-center active:scale-95 ${
+                      className={`group relative p-4 sm:p-5 rounded-lg sm:rounded-xl border-2 transition-all duration-300 min-h-[100px] sm:min-h-[120px] flex flex-col justify-center active:scale-95 ${
                         selectedAmount === tier.amount && !isCustom
                           ? 'border-foh-light-green bg-foh-light-green/5 shadow-lg'
                           : 'border-gray-200 hover:border-foh-light-green/50 hover:shadow-md'
@@ -276,11 +326,31 @@ export default function DonationForm() {
                 </div>
               </div>
 
-              <div className="space-y-4 pt-4 border-t-2 border-gray-100">
-                <label className="block text-base sm:text-lg font-semibold text-foh-dark-brown mb-4">
-                  Your Information
-                </label>
+              {error && (
+                <div className="p-4 bg-red-50 border-2 border-red-200 rounded-xl">
+                  <p className="text-sm text-red-800 font-medium">{error}</p>
+                </div>
+              )}
 
+              <button
+                type="button"
+                onClick={handleNext}
+                className="w-full group px-6 sm:px-8 py-4 sm:py-5 bg-gradient-to-r from-foh-light-green to-foh-mid-green text-white rounded-full font-bold text-lg sm:text-xl shadow-xl hover:shadow-2xl active:scale-95 sm:hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 min-h-[56px]"
+              >
+                Continue
+                <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform" />
+              </button>
+            </div>
+          )}
+
+          {currentStep === 2 && (
+            <div className="space-y-6 animate-fadeIn">
+              <div className="mb-6">
+                <h3 className="text-xl sm:text-2xl font-bold text-foh-dark-brown mb-2">Your Information</h3>
+                <p className="text-sm text-gray-600">Please provide your contact details</p>
+              </div>
+
+              <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
@@ -333,7 +403,7 @@ export default function DonationForm() {
 
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number (Optional)
+                    Phone Number
                   </label>
                   <input
                     type="tel"
@@ -345,43 +415,164 @@ export default function DonationForm() {
                     placeholder="(555) 123-4567"
                   />
                 </div>
-              </div>
-            </div>
 
-            {error && (
-              <div className="mb-6 p-4 bg-red-50 border-2 border-red-200 rounded-xl">
-                <p className="text-sm text-red-800 font-medium">{error}</p>
+                <div>
+                  <label htmlFor="organization" className="block text-sm font-medium text-gray-700 mb-2">
+                    Organization Name
+                  </label>
+                  <input
+                    type="text"
+                    id="organization"
+                    name="organization"
+                    value={formData.organization}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-foh-light-green focus:outline-none focus:ring-4 focus:ring-foh-light-green/20 transition-all"
+                    placeholder="Your company or organization"
+                  />
+                </div>
               </div>
-            )}
 
-            <button
-              type="submit"
-              disabled={isProcessing}
-              className="w-full group px-6 sm:px-8 py-4 sm:py-5 bg-gradient-to-r from-foh-light-green to-foh-mid-green text-white rounded-full font-bold text-lg sm:text-xl shadow-xl hover:shadow-2xl active:scale-95 sm:hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none min-h-[56px]"
-            >
-              {isProcessing ? (
-                <>
-                  <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                <>
-                  Complete Your Gift
-                  <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform" />
-                </>
+              {error && (
+                <div className="p-4 bg-red-50 border-2 border-red-200 rounded-xl">
+                  <p className="text-sm text-red-800 font-medium">{error}</p>
+                </div>
               )}
-            </button>
-          </form>
 
-          <div className="mt-6 sm:mt-8 flex items-start gap-3 p-4 sm:p-6 bg-foh-lime/10 rounded-lg sm:rounded-xl">
-            <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-foh-mid-green flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="font-semibold text-foh-dark-brown mb-1 text-sm sm:text-base">100% Community Impact</p>
-              <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">
-                Every dollar you give stays right here in our community, fueling critical research that brings hope and healing to those who need it most. Your gift is fully tax-deductible and makes a lasting impact.
-              </p>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={handleBack}
+                  className="px-6 py-4 border-2 border-gray-300 text-gray-700 rounded-full font-bold text-lg hover:bg-gray-50 active:scale-95 transition-all duration-300 flex items-center gap-2"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                  Back
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="flex-1 group px-6 py-4 bg-gradient-to-r from-foh-light-green to-foh-mid-green text-white rounded-full font-bold text-lg shadow-xl hover:shadow-2xl active:scale-95 sm:hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
+                >
+                  Continue
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                </button>
+              </div>
             </div>
-          </div>
+          )}
+
+          {currentStep === 3 && (
+            <form onSubmit={handleSubmit} className="space-y-6 animate-fadeIn">
+              <div className="mb-6">
+                <h3 className="text-xl sm:text-2xl font-bold text-foh-dark-brown mb-2">Almost Done!</h3>
+                <p className="text-sm text-gray-600">Help us understand how you heard about us</p>
+              </div>
+
+              <div>
+                <label htmlFor="referralSource" className="block text-sm font-medium text-gray-700 mb-2">
+                  How did you hear about the Foundation of Hope?
+                </label>
+                <select
+                  id="referralSource"
+                  name="referralSource"
+                  value={formData.referralSource}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-foh-light-green focus:outline-none focus:ring-4 focus:ring-foh-light-green/20 transition-all bg-white"
+                >
+                  <option value="">Select an option (optional)</option>
+                  {referralOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {formData.referralSource === 'Other' && (
+                <div>
+                  <label htmlFor="referralCustom" className="block text-sm font-medium text-gray-700 mb-2">
+                    Please specify
+                  </label>
+                  <input
+                    type="text"
+                    id="referralCustom"
+                    name="referralCustom"
+                    value={formData.referralCustom}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-foh-light-green focus:outline-none focus:ring-4 focus:ring-foh-light-green/20 transition-all"
+                    placeholder="Tell us how you heard about us"
+                  />
+                </div>
+              )}
+
+              <div className="p-6 bg-foh-lime/10 rounded-xl border-2 border-foh-lime/20">
+                <h4 className="font-bold text-foh-dark-brown mb-3">Donation Summary</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Type:</span>
+                    <span className="font-semibold text-foh-dark-brown">
+                      {donationType === 'one_time' ? 'One-Time' : 'Monthly'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Amount:</span>
+                    <span className="font-semibold text-foh-dark-brown">
+                      ${isCustom ? parseFloat(customAmount).toFixed(2) : selectedAmount?.toFixed(2)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Donor:</span>
+                    <span className="font-semibold text-foh-dark-brown">
+                      {formData.firstName} {formData.lastName}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {error && (
+                <div className="p-4 bg-red-50 border-2 border-red-200 rounded-xl">
+                  <p className="text-sm text-red-800 font-medium">{error}</p>
+                </div>
+              )}
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={handleBack}
+                  disabled={isProcessing}
+                  className="px-6 py-4 border-2 border-gray-300 text-gray-700 rounded-full font-bold text-lg hover:bg-gray-50 active:scale-95 transition-all duration-300 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                  Back
+                </button>
+                <button
+                  type="submit"
+                  disabled={isProcessing}
+                  className="flex-1 group px-6 py-4 bg-gradient-to-r from-foh-light-green to-foh-mid-green text-white rounded-full font-bold text-lg shadow-xl hover:shadow-2xl active:scale-95 sm:hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                >
+                  {isProcessing ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      Complete Donation
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                    </>
+                  )}
+                </button>
+              </div>
+
+              <div className="flex items-start gap-3 p-4 bg-foh-lime/10 rounded-lg">
+                <CheckCircle className="w-5 h-5 text-foh-mid-green flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-semibold text-foh-dark-brown mb-1 text-sm">100% Community Impact</p>
+                  <p className="text-xs text-gray-700 leading-relaxed">
+                    Your gift is fully tax-deductible and makes a lasting impact in our community.
+                  </p>
+                </div>
+              </div>
+            </form>
+          )}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 text-center">

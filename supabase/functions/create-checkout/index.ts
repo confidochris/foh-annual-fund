@@ -13,6 +13,9 @@ interface CheckoutRequest {
   firstName: string;
   lastName: string;
   phone?: string;
+  organization?: string;
+  referralSource?: string;
+  referralCustom?: string;
   amount: number;
   donationType: 'one_time' | 'recurring';
 }
@@ -36,7 +39,7 @@ Deno.serve(async (req: Request) => {
 
     const data: CheckoutRequest = await req.json();
 
-    const { email, firstName, lastName, phone, amount, donationType } = data;
+    const { email, firstName, lastName, phone, organization, referralSource, referralCustom, amount, donationType } = data;
 
     if (!email || !amount || !donationType) {
       throw new Error('Missing required fields');
@@ -56,6 +59,9 @@ Deno.serve(async (req: Request) => {
           first_name: firstName,
           last_name: lastName,
           phone: phone,
+          organization: organization,
+          referral_source: referralSource,
+          referral_custom: referralCustom,
           updated_at: new Date().toISOString(),
         })
         .eq('id', existingDonor.id)
@@ -70,6 +76,9 @@ Deno.serve(async (req: Request) => {
           first_name: firstName,
           last_name: lastName,
           phone,
+          organization,
+          referral_source: referralSource,
+          referral_custom: referralCustom,
         })
         .select()
         .single();
@@ -101,7 +110,7 @@ Deno.serve(async (req: Request) => {
       .insert({
         donation_id: donation.id,
         event_type: 'checkout_initiated',
-        event_data: { amount, donationType },
+        event_data: { amount, donationType, referralSource },
         source: 'create-checkout',
       });
 
