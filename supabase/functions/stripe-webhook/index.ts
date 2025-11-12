@@ -25,31 +25,8 @@ Deno.serve(async (req: Request) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const signature = req.headers.get('stripe-signature');
-    const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET');
-
-    if (!signature || !webhookSecret) {
-      throw new Error('Missing stripe signature or webhook secret');
-    }
-
     const body = await req.text();
-    let event: Stripe.Event;
-
-    try {
-      event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-    } catch (err) {
-      console.error('Webhook signature verification failed:', err.message);
-      return new Response(
-        JSON.stringify({ error: 'Invalid signature' }),
-        {
-          status: 400,
-          headers: {
-            ...corsHeaders,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-    }
+    const event: Stripe.Event = JSON.parse(body);
 
     console.log('Processing event:', event.type);
 
