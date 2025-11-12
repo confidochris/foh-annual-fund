@@ -1,11 +1,8 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
+// ✅ Relative base makes it work on any host (Netlify, GitHub Pages, etc.)
 export default defineConfig({
-  base: '/foh-annual-fund/',
+  base: './',
   plugins: [react()],
-  optimizeDeps: {
-    exclude: ['lucide-react'],
-  },
-});
+})
