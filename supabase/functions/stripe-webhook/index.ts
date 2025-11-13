@@ -102,24 +102,15 @@ Deno.serve(async (req: Request) => {
           const isRecurring = donation.donation_type === 'recurring';
 
           const templateId = isRecurring ? RECURRING_TEMPLATE_ID : ONE_TIME_TEMPLATE_ID;
-          const emailSubject = isRecurring 
-            ? 'Thank You for Your Monthly Commitment!'
-            : 'Thank You for Your Generous Gift!';
 
           try {
-            await resend.emails.send({
+            const emailResponse = await resend.emails.send({
               from: 'Foundation of Hope <donations@walkforhope.com>',
               to: donor.email,
-              subject: emailSubject,
-              react: templateId as any,
-              react_props: {
-                firstName: firstName,
-                amount: amount.toFixed(2),
-                fullName: `${donor.first_name || ''} ${donor.last_name || ''}`.trim(),
-              },
+              template: templateId,
             });
 
-            console.log('Email sent successfully to:', donor.email);
+            console.log('Email sent successfully to:', donor.email, emailResponse);
 
             await supabase
               .from('donation_events')
