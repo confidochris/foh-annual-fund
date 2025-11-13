@@ -9,112 +9,9 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey, Stripe-Signature",
 };
 
-const getOneTimeEmailTemplate = (firstName: string, amount: number) => `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f5f5f5;">
-  <div style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-    <div style="background: linear-gradient(135deg, #2BB673 0%, #1F8A52 100%); padding: 40px 20px; text-align: center;">
-      <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold;">Thank You for Your Gift!</h1>
-    </div>
-    
-    <div style="padding: 40px 30px;">
-      <p style="font-size: 18px; color: #333; margin-bottom: 20px;">Dear ${firstName},</p>
-      
-      <p style="font-size: 16px; color: #555; line-height: 1.8; margin-bottom: 20px;">
-        We are deeply grateful for your generous donation of <strong style="color: #2BB673;">$${amount.toFixed(2)}</strong> to the Foundation of Hope. Your gift brings us closer to breakthroughs that will transform mental health care.
-      </p>
-      
-      <div style="background-color: #f8f9fa; border-left: 4px solid #2BB673; padding: 20px; margin: 30px 0; border-radius: 4px;">
-        <p style="margin: 0; font-size: 16px; color: #333; line-height: 1.6;">
-          <strong>Your Impact:</strong> Every dollar you give stays right here in our community, fueling critical research that brings hope and healing to those who need it most.
-        </p>
-      </div>
-      
-      <p style="font-size: 16px; color: #555; line-height: 1.8; margin-bottom: 20px;">
-        Your contribution is fully tax-deductible. A tax receipt will be sent to you separately for your records.
-      </p>
-      
-      <p style="font-size: 16px; color: #555; line-height: 1.8; margin-bottom: 20px;">
-        Thank you for being the difference in our community.
-      </p>
-      
-      <p style="font-size: 16px; color: #555; line-height: 1.8; margin-bottom: 10px;">
-        With gratitude,<br>
-        <strong>The Foundation of Hope Team</strong>
-      </p>
-    </div>
-    
-    <div style="background-color: #f8f9fa; padding: 30px; text-align: center; border-top: 1px solid #e9ecef;">
-      <p style="margin: 0; font-size: 14px; color: #6c757d;">
-        Foundation of Hope | San Diego, CA<br>
-        <a href="https://www.walkforhope.com" style="color: #2BB673; text-decoration: none;">www.walkforhope.com</a>
-      </p>
-    </div>
-  </div>
-</body>
-</html>
-`;
-
-const getRecurringEmailTemplate = (firstName: string, amount: number) => `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f5f5f5;">
-  <div style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-    <div style="background: linear-gradient(135deg, #2BB673 0%, #1F8A52 100%); padding: 40px 20px; text-align: center;">
-      <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold;">Welcome to Our Monthly Giving Community!</h1>
-    </div>
-    
-    <div style="padding: 40px 30px;">
-      <p style="font-size: 18px; color: #333; margin-bottom: 20px;">Dear ${firstName},</p>
-      
-      <p style="font-size: 16px; color: #555; line-height: 1.8; margin-bottom: 20px;">
-        Thank you for joining our monthly giving community with your commitment of <strong style="color: #2BB673;">$${amount.toFixed(2)} per month</strong>. Your sustained support makes a profound difference in advancing mental health research.
-      </p>
-      
-      <div style="background-color: #f8f9fa; border-left: 4px solid #2BB673; padding: 20px; margin: 30px 0; border-radius: 4px;">
-        <p style="margin: 0 0 15px 0; font-size: 16px; color: #333; line-height: 1.6;">
-          <strong>As a Monthly Donor, You Will:</strong>
-        </p>
-        <ul style="margin: 0; padding-left: 20px; font-size: 15px; color: #555;">
-          <li style="margin-bottom: 8px;">Provide steady, reliable funding for groundbreaking research</li>
-          <li style="margin-bottom: 8px;">Receive quarterly updates on the impact of your giving</li>
-          <li style="margin-bottom: 8px;">Be part of a committed community working toward mental health breakthroughs</li>
-        </ul>
-      </div>
-      
-      <p style="font-size: 16px; color: #555; line-height: 1.8; margin-bottom: 20px;">
-        Your monthly gift will be processed automatically, and you'll receive a tax receipt for your annual contributions. You can update or cancel your recurring donation at any time by contacting us.
-      </p>
-      
-      <p style="font-size: 16px; color: #555; line-height: 1.8; margin-bottom: 20px;">
-        Thank you for making such a meaningful commitment to our community.
-      </p>
-      
-      <p style="font-size: 16px; color: #555; line-height: 1.8; margin-bottom: 10px;">
-        With deep appreciation,<br>
-        <strong>The Foundation of Hope Team</strong>
-      </p>
-    </div>
-    
-    <div style="background-color: #f8f9fa; padding: 30px; text-align: center; border-top: 1px solid #e9ecef;">
-      <p style="margin: 0; font-size: 14px; color: #6c757d;">
-        Foundation of Hope | San Diego, CA<br>
-        <a href="https://www.walkforhope.com" style="color: #2BB673; text-decoration: none;">www.walkforhope.com</a>
-      </p>
-    </div>
-  </div>
-</body>
-</html>
-`;
+const RESEND_API_KEY = 're_6HqjnGXg_JHJuDBE71F9F7iC212aXCW7Y';
+const ONE_TIME_TEMPLATE_ID = 'f32637a1-e23e-475a-b10a-1027e511f6ce';
+const RECURRING_TEMPLATE_ID = '0d15502a-7950-4687-a460-3790a6275990';
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
@@ -129,7 +26,7 @@ Deno.serve(async (req: Request) => {
       apiVersion: '2023-10-16',
     });
 
-    const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
+    const resend = new Resend(RESEND_API_KEY);
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -204,20 +101,22 @@ Deno.serve(async (req: Request) => {
           const amount = parseFloat(donation.amount);
           const isRecurring = donation.donation_type === 'recurring';
 
+          const templateId = isRecurring ? RECURRING_TEMPLATE_ID : ONE_TIME_TEMPLATE_ID;
           const emailSubject = isRecurring 
             ? 'Thank You for Your Monthly Commitment!'
             : 'Thank You for Your Generous Gift!';
-
-          const emailHtml = isRecurring
-            ? getRecurringEmailTemplate(firstName, amount)
-            : getOneTimeEmailTemplate(firstName, amount);
 
           try {
             await resend.emails.send({
               from: 'Foundation of Hope <donations@walkforhope.com>',
               to: donor.email,
               subject: emailSubject,
-              html: emailHtml,
+              react: templateId as any,
+              react_props: {
+                firstName: firstName,
+                amount: amount.toFixed(2),
+                fullName: `${donor.first_name || ''} ${donor.last_name || ''}`.trim(),
+              },
             });
 
             console.log('Email sent successfully to:', donor.email);
@@ -230,7 +129,8 @@ Deno.serve(async (req: Request) => {
                 event_data: { 
                   email: donor.email, 
                   type: isRecurring ? 'recurring' : 'one_time',
-                  provider: 'resend'
+                  provider: 'resend',
+                  template_id: templateId
                 },
                 source: 'stripe-webhook',
               });
