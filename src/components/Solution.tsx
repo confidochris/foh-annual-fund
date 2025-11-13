@@ -35,15 +35,22 @@ export default function Solution() {
             </div>
 
             <div className="text-center mb-8">
-              <h3 className="text-2xl sm:text-3xl font-bold text-foh-dark-brown inline">
-                Our{' '}
+              <h3 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-[#21A0A0] to-[#2BB673] bg-clip-text text-transparent mb-3">
+                Our Research Pathway
               </h3>
-              <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold inline" style={{ color: '#2BB673' }}>
-                RESEARCH
-              </h3>
-              <h3 className="text-2xl sm:text-3xl font-bold text-foh-dark-brown inline">
-                {' '}Pathway
-              </h3>
+              <div className="flex items-center justify-center gap-3 max-w-xs mx-auto">
+                <div className="w-3 h-3 rounded-full bg-[#21A0A0]"></div>
+                <svg className="flex-1" height="2" viewBox="0 0 100 2" preserveAspectRatio="none">
+                  <path d="M 0 1 Q 25 0, 50 1 T 100 1" stroke="url(#pathGradient)" strokeWidth="2" fill="none"/>
+                  <defs>
+                    <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" style={{ stopColor: '#21A0A0', stopOpacity: 1 }} />
+                      <stop offset="100%" style={{ stopColor: '#2BB673', stopOpacity: 1 }} />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div className="w-3 h-3 rounded-full bg-[#2BB673]"></div>
+              </div>
             </div>
 
             <ResearchPathway />
