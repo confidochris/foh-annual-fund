@@ -1,4 +1,5 @@
-import { Microscope, ExternalLink, BookOpen } from 'lucide-react';
+import { useState } from 'react';
+import { Microscope, ExternalLink, BookOpen, ChevronLeft, ChevronRight } from 'lucide-react';
 import NextSection from './NextSection';
 
 interface Paper {
@@ -18,68 +19,72 @@ interface ResearcherProps {
 
 function ResearcherCard({ name, title, focus, currentResearch, image, papers, universityUrl }: ResearcherProps) {
   return (
-    <div className="group bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2">
-      <div className="aspect-square overflow-hidden bg-gradient-to-br from-foh-blue/10 to-foh-light-green/10">
-        <img
-          src={image}
-          alt={name}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-        />
-      </div>
-
-      <div className="p-6 sm:p-8">
-        <h3 className="text-xl sm:text-2xl font-bold text-foh-dark-brown mb-2">{name}</h3>
-        <p className="text-foh-mid-green font-semibold mb-4 text-sm sm:text-base">{title}</p>
-
-        <div className="mb-5 sm:mb-6">
-          <div className="flex items-center gap-2 mb-2 sm:mb-3">
-            <Microscope className="w-4 h-4 sm:w-5 sm:h-5 text-foh-orange flex-shrink-0" />
-            <span className="font-semibold text-foh-dark-brown text-sm sm:text-base">Research Focus</span>
-          </div>
-          <p className="text-gray-700 leading-relaxed text-xs sm:text-sm">{focus}</p>
+    <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-4xl mx-auto">
+      <div className="grid md:grid-cols-2 gap-0">
+        <div className="aspect-square overflow-hidden bg-gradient-to-br from-foh-blue/10 to-foh-light-green/10">
+          <img
+            src={image}
+            alt={name}
+            className="w-full h-full object-cover"
+          />
         </div>
 
-        <div className="mb-5 sm:mb-6">
-          <h4 className="font-semibold text-foh-dark-brown mb-2 text-sm sm:text-base">Current Research</h4>
-          <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">{currentResearch}</p>
-        </div>
-
-        {universityUrl && (
-          <div className="mb-5 sm:mb-6">
-            <a
-              href={universityUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm sm:text-base text-foh-mid-green hover:text-foh-light-green transition-colors font-semibold group/learn min-h-[44px] py-2"
-            >
-              <span>Learn More</span>
-              <ExternalLink className="w-4 h-4 group-hover/learn:translate-x-0.5 group-hover/learn:-translate-y-0.5 transition-transform" />
-            </a>
+        <div className="p-8 sm:p-10 flex flex-col">
+          <div className="mb-6">
+            <h3 className="text-2xl sm:text-3xl font-bold text-foh-dark-brown mb-2">{name}</h3>
+            <p className="text-foh-mid-green font-semibold text-base sm:text-lg">{title}</p>
           </div>
-        )}
 
-        <div className="border-t border-gray-200 pt-5 sm:pt-6">
-          <div className="flex items-center gap-2 mb-2 sm:mb-3">
-            <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-foh-light-green flex-shrink-0" />
-            <span className="text-xs sm:text-sm font-semibold text-foh-dark-brown">Published Papers</span>
+          <div className="mb-6">
+            <div className="flex items-center gap-2 mb-3">
+              <Microscope className="w-5 h-5 text-foh-orange flex-shrink-0" />
+              <span className="font-semibold text-foh-dark-brown">Research Focus</span>
+            </div>
+            <p className="text-gray-700 leading-relaxed text-sm">{focus}</p>
           </div>
-          <div className="space-y-2">
-            {papers.length > 0 ? (
-              papers.map((paper, idx) => (
-                <a
-                  key={idx}
-                  href={paper.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-start gap-2 text-xs sm:text-sm text-foh-mid-green hover:text-foh-light-green transition-colors group/link min-h-[44px] py-2"
-                >
-                  <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4 mt-0.5 flex-shrink-0 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
-                  <span className="line-clamp-2">{paper.title}</span>
-                </a>
-              ))
-            ) : (
-              <p className="text-xs sm:text-sm text-gray-500 italic">No published papers available at this time.</p>
-            )}
+
+          <div className="mb-6 flex-1">
+            <h4 className="font-semibold text-foh-dark-brown mb-2">Current Research</h4>
+            <p className="text-gray-600 text-sm leading-relaxed">{currentResearch}</p>
+          </div>
+
+          {universityUrl && (
+            <div className="mb-6">
+              <a
+                href={universityUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-foh-mid-green hover:text-foh-light-green transition-colors font-semibold group/learn"
+              >
+                <span>Learn More</span>
+                <ExternalLink className="w-4 h-4 group-hover/learn:translate-x-0.5 group-hover/learn:-translate-y-0.5 transition-transform" />
+              </a>
+            </div>
+          )}
+
+          <div className="border-t border-gray-200 pt-6">
+            <div className="flex items-center gap-2 mb-3">
+              <BookOpen className="w-4 h-4 text-foh-light-green flex-shrink-0" />
+              <span className="text-sm font-semibold text-foh-dark-brown">Published Papers</span>
+            </div>
+            <div className="space-y-2">
+              {papers.length > 0 ? (
+                papers.map((paper, idx) => (
+                  <a
+                    key={idx}
+                    href={paper.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-2 text-sm text-foh-mid-green hover:text-foh-light-green transition-colors group/link"
+                  >
+                    <ExternalLink className="w-4 h-4 mt-0.5 flex-shrink-0 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
+                    <span className="line-clamp-2">{paper.title}</span>
+                  </a>
+                ))
+              ) : (
+                <p className="text-sm text-gray-500 italic">No published papers available at this time.</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -88,12 +93,14 @@ function ResearcherCard({ name, title, focus, currentResearch, image, papers, un
 }
 
 export default function Research() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   const researchers: ResearcherProps[] = [
     {
       name: "Dr. Joyce Besheer",
       title: "Associate Director, Bowles Center for Alcohol Studies",
       focus: "Understanding the neural mechanisms that contribute to alcohol use disorders and drug addiction.",
-      currentResearch: "Dr. Joyce Besheer’s research explores whether semaglutide—a medication commonly used for diabetes and weight management—can reduce the brain’s response to alcohol. With alcohol use disorder affecting millions and few effective treatment options available, her work could uncover a new therapeutic pathway and demonstrate how existing medications can be repurposed to address mental health and addiction challenges.",
+      currentResearch: "Dr. Joyce Besheer's research explores whether semaglutide—a medication commonly used for diabetes and weight management—can reduce the brain's response to alcohol. With alcohol use disorder affecting millions and few effective treatment options available, her work could uncover a new therapeutic pathway and demonstrate how existing medications can be repurposed to address mental health and addiction challenges.",
       image: "https://i.ibb.co/Pv2y276r/JBesheer-headshot-Nov-2024-600x900-jpg.jpg",
       papers: [
         { title: "Semaglutide, tirzepatide, and retatrutide attenuate the interoceptive effects of alcohol in male and female rats.", url: "https://pubmed.ncbi.nlm.nih.gov/40699363/" },
@@ -118,13 +125,21 @@ export default function Research() {
     {
       name: "Dr. Parisa Kaliush",
       title: "Postdoctoral Fellow, Reproductive Mood Disorders T32",
-      focus: "Postdoctoral research at UNC’s NIMH T32 training fellowship in reproductive mood disorders.",
+      focus: "Postdoctoral research at UNC's NIMH T32 training fellowship in reproductive mood disorders.",
       currentResearch: "Dr. Parisa Kaliush is developing the first suicide prevention program designed specifically for pregnant and postpartum women, one of the most overlooked high-risk populations in mental healthcare. By adapting Brief Cognitive Behavioral Therapy (BCBT) for women experiencing acute distress, her research aims to create a feasible, research-backed treatment that reduces suicide risk and saves lives during the vulnerable perinatal period.",
       image: "https://i.ibb.co/d4BDFxK8/Parisa-Kaliush-jpg.jpg",
       papers: [],
       universityUrl: "https://www.med.unc.edu/psych/people/parisa-kaliush-phd/"
     }
   ];
+
+  const goToNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % researchers.length);
+  };
+
+  const goToPrevious = () => {
+    setCurrentIndex((prev) => (prev - 1 + researchers.length) % researchers.length);
+  };
 
   return (
     <section id="research" className="py-16 sm:py-20 md:py-24 bg-gradient-to-b from-foh-lime/5 via-white to-foh-blue/5">
@@ -133,7 +148,7 @@ export default function Research() {
           <div className="inline-flex items-center gap-2 mb-4">
             <Microscope className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: '#2BB673' }} />
             <span className="text-xs sm:text-sm font-semibold uppercase tracking-wider" style={{ color: '#2BB673' }}>
-              Unfolding Your Investment  
+              Unfolding Your Investment
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foh-dark-brown mb-4 sm:mb-6 px-4">
@@ -145,10 +160,44 @@ export default function Research() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {researchers.map((researcher, idx) => (
-            <ResearcherCard key={idx} {...researcher} />
-          ))}
+        <div className="relative max-w-5xl mx-auto">
+          <div className="relative">
+            <ResearcherCard {...researchers[currentIndex]} />
+          </div>
+
+          <div className="flex items-center justify-center gap-6 mt-8">
+            <button
+              onClick={goToPrevious}
+              className="flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 text-foh-mid-green hover:bg-foh-light-green/10"
+              aria-label="Previous researcher"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+
+            <div className="flex gap-2">
+              {researchers.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentIndex(index)}
+                  className="transition-all duration-300 rounded-full"
+                  style={{
+                    backgroundColor: index === currentIndex ? '#2BB673' : '#D1D5DB',
+                    width: index === currentIndex ? '2.5rem' : '0.75rem',
+                    height: '0.75rem'
+                  }}
+                  aria-label={`Go to researcher ${index + 1}`}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={goToNext}
+              className="flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 text-foh-mid-green hover:bg-foh-light-green/10"
+              aria-label="Next researcher"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          </div>
         </div>
 
         <div className="mt-12 sm:mt-16 bg-gradient-to-r from-foh-light-green/10 via-foh-blue/10 to-foh-lime/10 rounded-xl sm:rounded-2xl p-6 sm:p-10 md:p-12 text-center">
