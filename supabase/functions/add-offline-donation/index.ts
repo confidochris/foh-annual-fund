@@ -50,7 +50,7 @@ Deno.serve(async (req: Request) => {
     if (error) {
       console.error('Error inserting donation:', error);
       return new Response(
-        JSON.stringify({ error: 'Failed to add donation' }),
+        JSON.stringify({ error: 'Failed to add donation', details: error.message }),
         {
           status: 500,
           headers: {
