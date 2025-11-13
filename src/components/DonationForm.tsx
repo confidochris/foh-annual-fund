@@ -14,7 +14,7 @@ export default function DonationForm() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentAmount, setCurrentAmount] = useState(0);
-  const [goalAmount] = useState(100000);
+  const [goalAmount, setGoalAmount] = useState(100000);
   const [isLoadingProgress, setIsLoadingProgress] = useState(true);
 
   const [formData, setFormData] = useState({
@@ -63,18 +63,29 @@ export default function DonationForm() {
 
   const fetchDonationProgress = async () => {
     try {
-      const { data: donations, error } = await supabase
-        .from('donations')
-        .select('amount, status')
-        .eq('status', 'completed');
+      const [donationsResult, settingsResult] = await Promise.all([
+        supabase
+          .from('donations')
+          .select('amount, status')
+          .eq('status', 'completed'),
+        supabase
+          .from('campaign_settings')
+          .select('goal_amount')
+          .single()
+      ]);
 
-      if (error) {
-        console.error('Error fetching donations:', error);
-        return;
+      if (donationsResult.error) {
+        console.error('Error fetching donations:', donationsResult.error);
+      } else {
+        const totalRaised = donationsResult.data?.reduce((sum, d) => sum + parseFloat(d.amount), 0) || 0;
+        setCurrentAmount(totalRaised);
       }
 
-      const totalRaised = donations?.reduce((sum, d) => sum + parseFloat(d.amount), 0) || 0;
-      setCurrentAmount(totalRaised);
+      if (settingsResult.error) {
+        console.error('Error fetching campaign settings:', settingsResult.error);
+      } else if (settingsResult.data) {
+        setGoalAmount(Number(settingsResult.data.goal_amount));
+      }
     } catch (error) {
       console.error('Error fetching donation progress:', error);
     } finally {
