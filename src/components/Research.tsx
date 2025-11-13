@@ -70,13 +70,11 @@ function ResearcherCard({ name, title, focus, currentResearch, image, papers, un
             <p className="text-gray-700 leading-relaxed text-sm">{focus}</p>
           </div>
 
-          <div className="mb-6 flex-1">
+          <div className="flex-1">
             <h4 className="font-semibold text-foh-dark-brown mb-2">Current Research</h4>
-            <p className="text-gray-600 text-sm leading-relaxed">{currentResearch}</p>
-          </div>
+            <p className="text-gray-600 text-sm leading-relaxed mb-6">{currentResearch}</p>
 
-          {universityUrl && (
-            <div>
+            {universityUrl && (
               <a
                 href={universityUrl}
                 target="_blank"
@@ -86,8 +84,8 @@ function ResearcherCard({ name, title, focus, currentResearch, image, papers, un
                 <span>Learn More</span>
                 <ExternalLink className="w-4 h-4 group-hover/learn:translate-x-0.5 group-hover/learn:-translate-y-0.5 transition-transform" />
               </a>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
