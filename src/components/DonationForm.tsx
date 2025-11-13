@@ -1,6 +1,7 @@
 import { ArrowRight, Heart, CheckCircle, Loader2, ChevronLeft } from 'lucide-react';
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
+import { supabase } from '../lib/supabase';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
 
@@ -12,6 +13,9 @@ export default function DonationForm() {
   const [donationType, setDonationType] = useState<'one_time' | 'recurring'>('one_time');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentAmount, setCurrentAmount] = useState(0);
+  const [goalAmount] = useState(100000);
+  const [isLoadingProgress, setIsLoadingProgress] = useState(true);
 
   const [formData, setFormData] = useState({
     email: '',
@@ -40,9 +44,43 @@ export default function DonationForm() {
     'Other',
   ];
 
-  const currentAmount = 12500;
-  const goalAmount = 250000;
   const progressPercentage = (currentAmount / goalAmount) * 100;
+
+  useEffect(() => {
+    fetchDonationProgress();
+
+    const channel = supabase
+      .channel('donations-changes-form')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'donations' }, () => {
+        fetchDonationProgress();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const fetchDonationProgress = async () => {
+    try {
+      const { data: donations, error } = await supabase
+        .from('donations')
+        .select('amount, status')
+        .eq('status', 'completed');
+
+      if (error) {
+        console.error('Error fetching donations:', error);
+        return;
+      }
+
+      const totalRaised = donations?.reduce((sum, d) => sum + parseFloat(d.amount), 0) || 0;
+      setCurrentAmount(totalRaised);
+    } catch (error) {
+      console.error('Error fetching donation progress:', error);
+    } finally {
+      setIsLoadingProgress(false);
+    }
+  };
 
   const formatPhoneNumber = (value: string) => {
     const cleaned = value.replace(/\D/g, '');
@@ -223,7 +261,7 @@ export default function DonationForm() {
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 mb-4">
                   <span className="text-base sm:text-lg font-semibold text-foh-dark-brown">Campaign Progress</span>
                   <span className="text-xl sm:text-2xl font-bold text-foh-light-green">
-                    ${currentAmount.toLocaleString()}
+                    {isLoadingProgress ? '...' : `$${currentAmount.toLocaleString()}`}
                   </span>
                 </div>
 

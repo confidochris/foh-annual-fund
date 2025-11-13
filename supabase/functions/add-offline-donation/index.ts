@@ -35,14 +35,23 @@ Deno.serve(async (req: Request) => {
       );
     }
 
+    const metadata: any = {
+      source: 'admin_offline',
+      is_offline: true,
+    };
+    if (donor_name) metadata.donor_name = donor_name;
+    if (donor_email) metadata.donor_email = donor_email;
+    if (notes) metadata.notes = notes;
+
     const { data, error } = await supabase
       .from('donations')
       .insert({
         amount: amount,
-        donor_name: donor_name || null,
-        donor_email: donor_email || null,
-        donation_type: 'offline',
-        notes: notes || null,
+        currency: 'USD',
+        donation_type: 'one_time',
+        status: 'completed',
+        completed_at: new Date().toISOString(),
+        metadata: metadata,
       })
       .select()
       .single();
