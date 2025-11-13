@@ -21,48 +21,16 @@ function ResearcherCard({ name, title, focus, currentResearch, image, papers, un
   return (
     <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-4xl mx-auto">
       <div className="grid md:grid-cols-2 gap-0">
-        <div className="aspect-square overflow-hidden bg-gradient-to-br from-foh-blue/10 to-foh-light-green/10">
-          <img
-            src={image}
-            alt={name}
-            className="w-full h-full object-cover"
-          />
-        </div>
-
-        <div className="p-8 sm:p-10 flex flex-col">
-          <div className="mb-6">
-            <h3 className="text-2xl sm:text-3xl font-bold text-foh-dark-brown mb-2">{name}</h3>
-            <p className="text-foh-mid-green font-semibold text-base sm:text-lg">{title}</p>
+        <div className="flex flex-col">
+          <div className="aspect-square overflow-hidden bg-gradient-to-br from-foh-blue/10 to-foh-light-green/10">
+            <img
+              src={image}
+              alt={name}
+              className="w-full h-full object-cover"
+            />
           </div>
 
-          <div className="mb-6">
-            <div className="flex items-center gap-2 mb-3">
-              <Microscope className="w-5 h-5 text-foh-orange flex-shrink-0" />
-              <span className="font-semibold text-foh-dark-brown">Research Focus</span>
-            </div>
-            <p className="text-gray-700 leading-relaxed text-sm">{focus}</p>
-          </div>
-
-          <div className="mb-6 flex-1">
-            <h4 className="font-semibold text-foh-dark-brown mb-2">Current Research</h4>
-            <p className="text-gray-600 text-sm leading-relaxed">{currentResearch}</p>
-          </div>
-
-          {universityUrl && (
-            <div className="mb-6">
-              <a
-                href={universityUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-foh-mid-green hover:text-foh-light-green transition-colors font-semibold group/learn"
-              >
-                <span>Learn More</span>
-                <ExternalLink className="w-4 h-4 group-hover/learn:translate-x-0.5 group-hover/learn:-translate-y-0.5 transition-transform" />
-              </a>
-            </div>
-          )}
-
-          <div className="border-t border-gray-200 pt-6">
+          <div className="p-6 border-t border-gray-200">
             <div className="flex items-center gap-2 mb-3">
               <BookOpen className="w-4 h-4 text-foh-light-green flex-shrink-0" />
               <span className="text-sm font-semibold text-foh-dark-brown">Published Papers</span>
@@ -86,6 +54,40 @@ function ResearcherCard({ name, title, focus, currentResearch, image, papers, un
               )}
             </div>
           </div>
+        </div>
+
+        <div className="p-8 sm:p-10 flex flex-col">
+          <div className="mb-6">
+            <h3 className="text-2xl sm:text-3xl font-bold text-foh-dark-brown mb-2">{name}</h3>
+            <p className="text-foh-mid-green font-semibold text-base sm:text-lg">{title}</p>
+          </div>
+
+          <div className="mb-6">
+            <div className="flex items-center gap-2 mb-3">
+              <Microscope className="w-5 h-5 text-foh-orange flex-shrink-0" />
+              <span className="font-semibold text-foh-dark-brown">Research Focus</span>
+            </div>
+            <p className="text-gray-700 leading-relaxed text-sm">{focus}</p>
+          </div>
+
+          <div className="mb-6 flex-1">
+            <h4 className="font-semibold text-foh-dark-brown mb-2">Current Research</h4>
+            <p className="text-gray-600 text-sm leading-relaxed">{currentResearch}</p>
+          </div>
+
+          {universityUrl && (
+            <div>
+              <a
+                href={universityUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-foh-mid-green hover:text-foh-light-green transition-colors font-semibold group/learn"
+              >
+                <span>Learn More</span>
+                <ExternalLink className="w-4 h-4 group-hover/learn:translate-x-0.5 group-hover/learn:-translate-y-0.5 transition-transform" />
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -161,11 +163,7 @@ export default function Research() {
         </div>
 
         <div className="relative max-w-5xl mx-auto">
-          <div className="relative">
-            <ResearcherCard {...researchers[currentIndex]} />
-          </div>
-
-          <div className="flex items-center justify-center gap-6 mt-8">
+          <div className="flex items-center justify-center gap-6 mb-6">
             <button
               onClick={goToPrevious}
               className="flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 text-foh-mid-green hover:bg-foh-light-green/10"
@@ -197,6 +195,10 @@ export default function Research() {
             >
               <ChevronRight className="w-6 h-6" />
             </button>
+          </div>
+
+          <div className="relative">
+            <ResearcherCard {...researchers[currentIndex]} />
           </div>
         </div>
 
