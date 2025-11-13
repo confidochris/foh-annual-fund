@@ -225,7 +225,7 @@ export default function DonationForm() {
             Be the Difference
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4 leading-relaxed">
-            Your gift today brings us closer to breakthroughs that will transform mental health for years to come
+            Your gift today brings us closer to breakthroughs that will transform mental health for years to come.
           </p>
         </div>
 
