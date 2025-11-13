@@ -97,11 +97,10 @@ Deno.serve(async (req: Request) => {
 
         if (donation.donors && donation.donors.email) {
           const donor = donation.donors;
-          const firstName = donor.first_name || 'Friend';
-          const amount = parseFloat(donation.amount);
           const isRecurring = donation.donation_type === 'recurring';
-
           const templateId = isRecurring ? RECURRING_TEMPLATE_ID : ONE_TIME_TEMPLATE_ID;
+
+          console.log('Attempting to send email to:', donor.email, 'with template:', templateId);
 
           try {
             const emailResponse = await resend.emails.send({
@@ -110,23 +109,44 @@ Deno.serve(async (req: Request) => {
               template: templateId,
             });
 
-            console.log('Email sent successfully to:', donor.email, emailResponse);
+            console.log('Resend API response:', JSON.stringify(emailResponse));
 
-            await supabase
-              .from('donation_events')
-              .insert({
-                donation_id: donationId,
-                event_type: 'email_sent',
-                event_data: { 
-                  email: donor.email, 
-                  type: isRecurring ? 'recurring' : 'one_time',
-                  provider: 'resend',
-                  template_id: templateId
-                },
-                source: 'stripe-webhook',
-              });
+            if (emailResponse.error) {
+              console.error('Resend returned error:', emailResponse.error);
+              
+              await supabase
+                .from('donation_events')
+                .insert({
+                  donation_id: donationId,
+                  event_type: 'email_failed',
+                  event_data: { 
+                    error: emailResponse.error,
+                    email: donor.email,
+                    template_id: templateId
+                  },
+                  source: 'stripe-webhook',
+                });
+            } else {
+              console.log('Email sent successfully to:', donor.email, 'ID:', emailResponse.data?.id);
+
+              await supabase
+                .from('donation_events')
+                .insert({
+                  donation_id: donationId,
+                  event_type: 'email_sent',
+                  event_data: { 
+                    email: donor.email, 
+                    type: isRecurring ? 'recurring' : 'one_time',
+                    provider: 'resend',
+                    template_id: templateId,
+                    email_id: emailResponse.data?.id
+                  },
+                  source: 'stripe-webhook',
+                });
+            }
           } catch (emailError) {
-            console.error('Error sending email:', emailError);
+            console.error('Exception sending email:', emailError);
+            console.error('Error details:', JSON.stringify(emailError, null, 2));
             
             await supabase
               .from('donation_events')
@@ -134,8 +154,9 @@ Deno.serve(async (req: Request) => {
                 donation_id: donationId,
                 event_type: 'email_failed',
                 event_data: { 
-                  error: emailError.message,
-                  email: donor.email
+                  error: emailError.message || String(emailError),
+                  email: donor.email,
+                  template_id: templateId
                 },
                 source: 'stripe-webhook',
               });
