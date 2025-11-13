@@ -34,9 +34,17 @@ export default function Solution() {
               </p>
             </div>
 
-            <h3 className="text-2xl sm:text-3xl font-bold text-foh-dark-brown text-center mb-8">
-              Our Research Pathway
-            </h3>
+            <div className="text-center mb-8">
+              <h3 className="text-2xl sm:text-3xl font-bold text-foh-dark-brown inline">
+                Our{' '}
+              </h3>
+              <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold inline" style={{ color: '#2BB673' }}>
+                RESEARCH
+              </h3>
+              <h3 className="text-2xl sm:text-3xl font-bold text-foh-dark-brown inline">
+                {' '}Pathway
+              </h3>
+            </div>
 
             <ResearchPathway />
           </div>
