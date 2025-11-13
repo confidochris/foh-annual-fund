@@ -78,7 +78,12 @@ export default function ResearchPathway() {
 
   return (
     <div className="relative max-w-3xl mx-auto">
-      <div className="relative bg-white rounded-2xl shadow-xl p-8 md:p-12 min-h-[500px] flex flex-col">
+      <div
+        className="relative rounded-2xl shadow-xl p-8 md:p-12 min-h-[500px] flex flex-col transition-colors duration-500"
+        style={{
+          backgroundColor: isLastCard ? '#ffffff' : currentStep?.color
+        }}
+      >
         {isLastCard ? (
           <div className="flex flex-col items-center justify-center flex-1 text-center">
             <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
@@ -97,42 +102,37 @@ export default function ResearchPathway() {
         ) : currentStep && (
           <>
             <div className="mb-6">
-              <div
-                className="inline-block px-4 py-2 rounded-lg mb-4"
-                style={{ backgroundColor: `${currentStep.color}20` }}
-              >
+              <div className="mb-4">
                 <div className="flex items-center gap-3">
-                  <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold"
-                    style={{ backgroundColor: currentStep.color }}
-                  >
+                  <div className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center text-white font-bold">
                     {currentIndex + 1}
                   </div>
-                  <h3
-                    className="text-2xl md:text-3xl font-bold"
-                    style={{ color: currentStep.color }}
-                  >
+                  <h3 className="text-2xl md:text-3xl font-bold text-white">
                     {currentStep.title}
                   </h3>
                 </div>
               </div>
-              <p className="text-xl text-gray-600 italic">
+              <p className="text-xl text-white/95 italic">
                 {currentStep.description}
               </p>
             </div>
 
             <div className="flex-1">
-              <p className="text-lg text-gray-700 leading-relaxed">
+              <p className="text-lg text-white/90 leading-relaxed">
                 {currentStep.details}
               </p>
             </div>
           </>
         )}
 
-        <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-200">
+        <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/20">
           <button
             onClick={goToPrevious}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-700 font-medium"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-medium"
+            style={{
+              color: isLastCard ? '#4B5563' : 'white',
+              backgroundColor: isLastCard ? '#F3F4F6' : 'rgba(255, 255, 255, 0.2)'
+            }}
             aria-label="Previous step"
           >
             <ChevronLeft className="w-5 h-5" />
@@ -147,8 +147,8 @@ export default function ResearchPathway() {
                 className="w-2 h-2 rounded-full transition-all duration-300"
                 style={{
                   backgroundColor: index === currentIndex
-                    ? (index === pathwaySteps.length ? '#2BB673' : pathwaySteps[index].color)
-                    : '#D1D5DB',
+                    ? 'white'
+                    : isLastCard ? '#D1D5DB' : 'rgba(255, 255, 255, 0.4)',
                   width: index === currentIndex ? '2rem' : '0.5rem'
                 }}
                 aria-label={`Go to ${index === pathwaySteps.length ? 'donation' : `step ${index + 1}`}`}
@@ -158,7 +158,11 @@ export default function ResearchPathway() {
 
           <button
             onClick={goToNext}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-700 font-medium"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-medium"
+            style={{
+              color: isLastCard ? '#4B5563' : 'white',
+              backgroundColor: isLastCard ? '#F3F4F6' : 'rgba(255, 255, 255, 0.2)'
+            }}
             aria-label="Next step"
           >
             <span className="hidden sm:inline">Next</span>

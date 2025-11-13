@@ -34,12 +34,9 @@ export default function Solution() {
               </p>
             </div>
 
-            <h3 className="text-2xl sm:text-3xl font-bold text-foh-dark-brown text-center mb-6">
+            <h3 className="text-2xl sm:text-3xl font-bold text-foh-dark-brown text-center mb-8">
               Our Research Pathway
             </h3>
-            <p className="text-center text-gray-600 mb-8 text-sm sm:text-base">
-              Click on any step to learn more
-            </p>
 
             <ResearchPathway />
           </div>
