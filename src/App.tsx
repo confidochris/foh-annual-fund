@@ -1,3 +1,4 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import TopBanner from './components/TopBanner';
 import LogoBanner from './components/LogoBanner';
 import StickyNav from './components/StickyNav';
@@ -12,10 +13,11 @@ import DonationForm from './components/DonationForm';
 import Closing from './components/Closing';
 import FloatingCTA from './components/FloatingCTA';
 import ScrollToTop from './components/ScrollToTop';
+import AdminDonations from './components/AdminDonations';
 
-function App() {
+function HomePage() {
   return (
-    <div className="min-h-screen bg-white">
+    <>
       <TopBanner />
       <LogoBanner />
       <StickyNav />
@@ -30,7 +32,20 @@ function App() {
       <Closing />
       <FloatingCTA />
       <ScrollToTop />
-    </div>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <div className="min-h-screen bg-white">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/admin/donations" element={<AdminDonations />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
