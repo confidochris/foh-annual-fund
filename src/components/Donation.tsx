@@ -43,7 +43,12 @@ export default function Donation() {
 
   const fetchDonationProgress = async () => {
     try {
+      console.log('Fetching donation progress...');
+      console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
+
       const { data, error } = await supabase.rpc('get_donation_progress');
+
+      console.log('RPC Response:', { data, error });
 
       if (error) {
         console.error('Error fetching donation progress:', error);
@@ -51,6 +56,7 @@ export default function Donation() {
       }
 
       if (data && data.length > 0) {
+        console.log('Setting progress:', data[0]);
         setProgress({
           total_raised: Number(data[0].total_raised),
           goal_amount: Number(data[0].goal_amount),
