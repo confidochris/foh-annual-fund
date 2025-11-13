@@ -160,22 +160,9 @@ export default function Research() {
           </p>
         </div>
 
-        <div className="relative max-w-6xl mx-auto overflow-hidden px-4 md:px-0">
-          <div className="relative flex items-center justify-center">
-            {/* Previous card peek (desktop only) */}
-            <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-1/4 opacity-30 pointer-events-none -translate-x-1/3 scale-90 transition-all duration-500">
-              <ResearcherCard {...researchers[(currentIndex - 1 + researchers.length) % researchers.length]} />
-            </div>
-
-            {/* Current card */}
-            <div className="relative z-10 w-full max-w-4xl transition-all duration-500">
-              <ResearcherCard {...researchers[currentIndex]} />
-            </div>
-
-            {/* Next card peek (desktop only) */}
-            <div className="hidden lg:block absolute right-0 top-0 bottom-0 w-1/4 opacity-30 pointer-events-none translate-x-1/3 scale-90 transition-all duration-500">
-              <ResearcherCard {...researchers[(currentIndex + 1) % researchers.length]} />
-            </div>
+        <div className="relative max-w-5xl mx-auto">
+          <div className="relative">
+            <ResearcherCard {...researchers[currentIndex]} />
           </div>
 
           <div className="flex items-center justify-center gap-6 mt-8">
