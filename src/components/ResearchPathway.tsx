@@ -17,7 +17,7 @@ const pathwaySteps: PathwayStep[] = [
     color: '#7FC8E8',
     hoverColor: '#5FB0D8',
     description: 'Researchers propose bold new studies',
-    details: 'The research pathway begins with innovative ideas from talented researchers who envision new approaches to understanding and treating mental illness. These bold proposals represent fresh thinking and novel methodologies that could transform mental health care. The Foundation of Hope seeks out these pioneering researchers and supports their vision to explore uncharted territory in mental health research.'
+    details: 'The research pathway begins with innovative ideas from talented researchers who apply for Foundation of Hope seed grants to explore new ways of understanding and treating mental illness. These bold proposals reflect fresh thinking and novel approaches that have the potential to transform mental illness care. Through this competitive grant process, the Foundation of Hope provides critical early funding that helps visionary scientists and researchers turn promising ideas into actionable research.'
   },
   {
     id: 'scientific-review',
@@ -25,7 +25,7 @@ const pathwaySteps: PathwayStep[] = [
     color: '#A4D65E',
     hoverColor: '#8BC045',
     description: 'Projects are rigorously vetted by experts',
-    details: 'Each proposed research project undergoes rigorous scientific review by leading experts in psychiatry, neuroscience, and mental health. This peer review process ensures that funded projects have scientific merit, feasible methodologies, and the potential to generate meaningful insights. Only the most promising research initiatives receive funding, ensuring donors\' investments support truly groundbreaking work.'
+    details: 'Every proposal submitted to the Foundation of Hope undergoes rigorous evaluation by our esteemed Scientific Advisory Committee, a panel of leading experts in psychiatry, neuroscience, and mental illness. Each grant application is carefully reviewed for scientific merit, methodological soundness, and potential for impact. Only the most promising studies receive approval and funding, ensuring that every donor dollar supports research with the greatest potential to advance our understanding and treatment of mental illness.'
   },
   {
     id: 'investment',
@@ -33,7 +33,7 @@ const pathwaySteps: PathwayStep[] = [
     color: '#4DB8D8',
     hoverColor: '#3A9FC0',
     description: 'Your generous gifts fund seed grants',
-    details: 'Private donations to the Foundation of Hope provide the critical seed funding that launches approved research projects. These generous gifts from individuals, families, and organizations make it possible for researchers to begin their work. This initial investment is the catalyst that starts the entire research process and creates opportunities for even greater funding through federal grants.'
+    details: 'Private donations to the Foundation of Hope provide the vital seed funding that brings approved research projects to life. These generous gifts from individuals, families, and organizations make it possible for scientists to begin their work and gather the preliminary data needed to pursue larger grants. This early investment ignites the research process, turning potential into progress and laying the foundation for future breakthroughs in the study and treatment of mental illness.'
   },
   {
     id: 'research-action',
@@ -41,7 +41,7 @@ const pathwaySteps: PathwayStep[] = [
     color: '#2BB673',
     hoverColor: '#229A5E',
     description: 'Innovative studies begin',
-    details: 'With funding secured, researchers launch their studies at UNC Chapel Hill\'s Department of Psychiatry and partner institutions. This is where innovative ideas become reality through clinical trials, data collection, laboratory work, and patient studies. Researchers work diligently to test hypotheses, gather evidence, and build the knowledge base that will inform future treatments and interventions.'
+    details: 'Over a three-year period, researchers use Foundation of Hope seed funding to conduct studies that catalyze innovation in the understanding and treatment of mental illness. This early support allows researchers to generate critical preliminary data, proof of concept that strengthens their ability to compete for major external grants. Each study sets the stage for larger, more expansive research, multiplying the impact of every donor dollar and transforming a single seed grant into extraordinary scientific growth.'
   },
   {
     id: 'major-expansion',
@@ -49,7 +49,7 @@ const pathwaySteps: PathwayStep[] = [
     color: '#B8D89E',
     hoverColor: '#A0C585',
     description: 'Results attract NIH-level funding',
-    details: 'Strong preliminary results from Foundation-funded research enable scientists to compete for major federal grants from the National Institutes of Health (NIH), National Institute of Mental Health (NIMH), and other federal agencies. This is where the multiplier effect happens: every dollar from the Foundation of Hope can generate up to $25 in additional federal funding, dramatically expanding the scope and impact of the original research.'
+    details: 'When Foundation of Hope–funded research yields strong preliminary results, researchers can compete for major federal grants from the National Institutes of Health (NIH), the National Institute of Mental Health (NIMH), and other leading organizations. This is where the multiplier effect takes hold: every dollar invested by the Foundation of Hope can generate up to $25 in additional federal funding on average. These new resources expand the scale and reach of the original study, accelerating progress toward more effective treatments for mental illness.'
   },
   {
     id: 'breakthroughs',
@@ -57,7 +57,7 @@ const pathwaySteps: PathwayStep[] = [
     color: '#2D8B5F',
     hoverColor: '#237049',
     description: 'Discoveries that improve lives',
-    details: 'The ultimate goal: breakthrough discoveries that transform mental health care. Foundation-funded research leads to new treatments, improved therapies, better diagnostic tools, and deeper understanding of mental illness. These breakthroughs translate into real-world impact—individuals recover, families find hope, stigma decreases, and communities become healthier. This is the power of your investment in research.'
+    details: 'The ultimate goal is breakthrough discoveries that transform the understanding and treatment of mental illness. Foundation of Hope–funded research leads to new therapies, better diagnostic tools, and more effective prevention strategies. These advancements translate into real-world impact as individuals recover, families find hope, stigma decreases, and communities grow stronger. This is the lasting power of your investment in research.'
   }
 ];
 
