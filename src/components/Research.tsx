@@ -155,8 +155,8 @@ export default function Research() {
             Cutting Edge Research Examples
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto px-4 leading-relaxed">
-            Meet a few of the dedicated researchers working every day to unlock new treatments and save lives through
-            your generous contributions
+            Meet a few of the many dedicated researchers working every day to unlock new treatments and save lives through
+            your generous contributions.
           </p>
         </div>
 
