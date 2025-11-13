@@ -106,7 +106,9 @@ Deno.serve(async (req: Request) => {
             const emailResponse = await resend.emails.send({
               from: 'Foundation of Hope <donations@walkforhope.com>',
               to: donor.email,
-              template: templateId,
+              template: {
+                id: templateId
+              },
             });
 
             console.log('Resend API response:', JSON.stringify(emailResponse));
