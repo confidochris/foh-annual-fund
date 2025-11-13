@@ -1,10 +1,23 @@
 import { ArrowRight, Heart, CheckCircle } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
+
+interface DonationProgress {
+  total_raised: number;
+  goal_amount: number;
+  donor_count: number;
+}
 
 export default function Donation() {
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
   const [customAmount, setCustomAmount] = useState('');
   const [isCustom, setIsCustom] = useState(false);
+  const [progress, setProgress] = useState<DonationProgress>({
+    total_raised: 0,
+    goal_amount: 100000,
+    donor_count: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
 
   const donationTiers = [
     { amount: 50, impact: 'Helps light the spark of discovery' },
@@ -13,9 +26,45 @@ export default function Donation() {
     { amount: 1000, impact: 'Moves us closer to breakthroughs' },
   ];
 
-  const currentAmount = 12500;
-  const goalAmount = 250000;
-  const progressPercentage = (currentAmount / goalAmount) * 100;
+  useEffect(() => {
+    fetchDonationProgress();
+
+    const channel = supabase
+      .channel('donations-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'donations' }, () => {
+        fetchDonationProgress();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const fetchDonationProgress = async () => {
+    try {
+      const { data, error } = await supabase.rpc('get_donation_progress');
+
+      if (error) {
+        console.error('Error fetching donation progress:', error);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        setProgress({
+          total_raised: Number(data[0].total_raised),
+          goal_amount: Number(data[0].goal_amount),
+          donor_count: Number(data[0].donor_count),
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching donation progress:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const progressPercentage = (progress.total_raised / progress.goal_amount) * 100;
 
   const handleDonateClick = () => {
     const amount = isCustom ? customAmount : selectedAmount;
@@ -45,7 +94,7 @@ export default function Donation() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 mb-4">
               <span className="text-base sm:text-lg font-semibold text-foh-dark-brown">Campaign Progress</span>
               <span className="text-xl sm:text-2xl font-bold text-foh-light-green">
-                ${currentAmount.toLocaleString()}
+                {isLoading ? '...' : `$${progress.total_raised.toLocaleString()}`}
               </span>
             </div>
 
@@ -59,8 +108,8 @@ export default function Donation() {
             </div>
 
             <div className="flex justify-between items-center text-xs sm:text-sm">
-              <span className="text-gray-600">{progressPercentage.toFixed(1)}% of goal</span>
-              <span className="text-gray-600">Goal: ${goalAmount.toLocaleString()}</span>
+              <span className="text-gray-600">{isLoading ? '...' : `${progressPercentage.toFixed(1)}% of goal`}</span>
+              <span className="text-gray-600">{isLoading ? '...' : `Goal: $${progress.goal_amount.toLocaleString()}`}</span>
             </div>
           </div>
 
@@ -151,7 +200,9 @@ export default function Donation() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 text-center">
           <div className="p-5 sm:p-6 bg-gradient-to-br from-foh-light-green/10 to-foh-blue/10 rounded-lg sm:rounded-xl">
-            <div className="text-3xl sm:text-4xl font-bold text-foh-light-green mb-2">10,000+</div>
+            <div className="text-3xl sm:text-4xl font-bold text-foh-light-green mb-2">
+              {isLoading ? '...' : `${progress.donor_count.toLocaleString()}+`}
+            </div>
             <div className="text-sm sm:text-base text-gray-700 font-medium">Generous Donors</div>
           </div>
           <div className="p-5 sm:p-6 bg-gradient-to-br from-foh-blue/10 to-foh-lime/10 rounded-lg sm:rounded-xl">
