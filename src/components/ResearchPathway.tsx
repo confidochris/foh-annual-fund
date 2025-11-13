@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, ArrowDown } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface PathwayStep {
   id: string;
@@ -62,115 +62,110 @@ const pathwaySteps: PathwayStep[] = [
 ];
 
 export default function ResearchPathway() {
-  const [selectedStep, setSelectedStep] = useState<PathwayStep | null>(null);
-  const [hoveredStep, setHoveredStep] = useState<string | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const totalCards = pathwaySteps.length + 1;
+
+  const goToNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % totalCards);
+  };
+
+  const goToPrevious = () => {
+    setCurrentIndex((prev) => (prev - 1 + totalCards) % totalCards);
+  };
+
+  const isLastCard = currentIndex === pathwaySteps.length;
+  const currentStep = isLastCard ? null : pathwaySteps[currentIndex];
 
   return (
-    <div className="relative">
-      <div className="flex flex-col gap-4">
-        {pathwaySteps.map((step, index) => (
-          <div key={step.id} className="relative">
-            <button
-              onClick={() => setSelectedStep(step)}
-              onMouseEnter={() => setHoveredStep(step.id)}
-              onMouseLeave={() => setHoveredStep(null)}
-              className="w-full text-left transition-all duration-300 transform hover:scale-102 focus:outline-none focus:ring-2 focus:ring-offset-2"
-              style={{
-                backgroundColor: hoveredStep === step.id ? step.hoverColor : step.color,
-                boxShadow: hoveredStep === step.id ? '0 10px 25px rgba(0,0,0,0.15)' : '0 4px 10px rgba(0,0,0,0.1)',
-                borderRadius: '12px',
-                padding: '20px 24px'
-              }}
+    <div className="relative max-w-3xl mx-auto">
+      <div className="relative bg-white rounded-2xl shadow-xl p-8 md:p-12 min-h-[500px] flex flex-col">
+        {isLastCard ? (
+          <div className="flex flex-col items-center justify-center flex-1 text-center">
+            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+              Support Life-Changing Research
+            </h3>
+            <p className="text-lg text-gray-700 mb-8 max-w-2xl">
+              Every donation to the Foundation of Hope fuels the research pathway that leads to breakthrough discoveries in mental illness treatment.
+            </p>
+            <a
+              href="#donation"
+              className="inline-block px-8 py-4 bg-gradient-to-r from-green-600 to-teal-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-teal-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
             >
-              <div className="flex items-center gap-4">
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-lg">
-                  {index + 1}
-                </div>
-                <div className="flex-1">
-                  <h4 className="text-xl font-bold text-white mb-1">
-                    {step.title}
-                  </h4>
-                  <p className="text-sm text-white/90">
-                    {step.description}
-                  </p>
-                </div>
-              </div>
-            </button>
-
-            {index < pathwaySteps.length - 1 && (
-              <div className="flex justify-center py-3">
-                <ArrowDown className="w-6 h-6 text-gray-400" strokeWidth={3} />
-              </div>
-            )}
+              Make Your Impact Today
+            </a>
           </div>
-        ))}
-      </div>
-
-      {selectedStep && (
-        <div
-          className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fadeIn"
-          onClick={() => setSelectedStep(null)}
-        >
-          <div
-            className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 relative animate-slideUp"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setSelectedStep(null)}
-              className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
-              aria-label="Close"
-            >
-              <X className="w-6 h-6 text-gray-600" />
-            </button>
-
-            <div
-              className="inline-block px-4 py-2 rounded-lg mb-4"
-              style={{ backgroundColor: `${selectedStep.color}20` }}
-            >
-              <h3
-                className="text-2xl font-bold"
-                style={{ color: selectedStep.color }}
+        ) : currentStep && (
+          <>
+            <div className="mb-6">
+              <div
+                className="inline-block px-4 py-2 rounded-lg mb-4"
+                style={{ backgroundColor: `${currentStep.color}20` }}
               >
-                {selectedStep.title}
-              </h3>
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold"
+                    style={{ backgroundColor: currentStep.color }}
+                  >
+                    {currentIndex + 1}
+                  </div>
+                  <h3
+                    className="text-2xl md:text-3xl font-bold"
+                    style={{ color: currentStep.color }}
+                  >
+                    {currentStep.title}
+                  </h3>
+                </div>
+              </div>
+              <p className="text-xl text-gray-600 italic">
+                {currentStep.description}
+              </p>
             </div>
 
-            <p className="text-gray-700 leading-relaxed text-lg">
-              {selectedStep.details}
-            </p>
+            <div className="flex-1">
+              <p className="text-lg text-gray-700 leading-relaxed">
+                {currentStep.details}
+              </p>
+            </div>
+          </>
+        )}
+
+        <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-200">
+          <button
+            onClick={goToPrevious}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-700 font-medium"
+            aria-label="Previous step"
+          >
+            <ChevronLeft className="w-5 h-5" />
+            <span className="hidden sm:inline">Previous</span>
+          </button>
+
+          <div className="flex gap-2">
+            {Array.from({ length: totalCards }).map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentIndex(index)}
+                className="w-2 h-2 rounded-full transition-all duration-300"
+                style={{
+                  backgroundColor: index === currentIndex
+                    ? (index === pathwaySteps.length ? '#2BB673' : pathwaySteps[index].color)
+                    : '#D1D5DB',
+                  width: index === currentIndex ? '2rem' : '0.5rem'
+                }}
+                aria-label={`Go to ${index === pathwaySteps.length ? 'donation' : `step ${index + 1}`}`}
+              />
+            ))}
           </div>
+
+          <button
+            onClick={goToNext}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-700 font-medium"
+            aria-label="Next step"
+          >
+            <span className="hidden sm:inline">Next</span>
+            <ChevronRight className="w-5 h-5" />
+          </button>
         </div>
-      )}
-
-      <style>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-fadeIn {
-          animation: fadeIn 0.2s ease-out;
-        }
-
-        .animate-slideUp {
-          animation: slideUp 0.3s ease-out;
-        }
-      `}</style>
+      </div>
     </div>
   );
 }
