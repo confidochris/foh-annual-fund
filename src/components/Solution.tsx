@@ -35,8 +35,10 @@ export default function Solution() {
             </div>
 
             <div className="text-center mb-8">
-              <h3 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-[#21A0A0] to-[#2BB673] bg-clip-text text-transparent mb-3">
-                Our Research Pathway
+              <h3 className="text-2xl sm:text-3xl font-bold mb-3">
+                <span className="text-foh-dark-brown">Our </span>
+                <span className="bg-gradient-to-r from-[#21A0A0] to-[#2BB673] bg-clip-text text-transparent">Research</span>
+                <span className="text-foh-dark-brown"> Pathway</span>
               </h3>
               <div className="flex items-center justify-center gap-3 max-w-xs mx-auto">
                 <div className="w-3 h-3 rounded-full bg-[#21A0A0]"></div>

@@ -112,15 +112,15 @@ export default function ResearchPathway() {
             <div className="mb-6">
               <div className="mb-4">
                 <div className="flex items-center gap-3">
-                  <div className={`w-8 h-8 rounded-full ${badgeBg} flex items-center justify-center ${textColor} font-bold`}>
+                  <div className={`w-10 h-10 rounded-full ${badgeBg} flex items-center justify-center ${textColor} font-bold text-lg`}>
                     {currentIndex + 1}
                   </div>
-                  <h3 className={`text-2xl md:text-3xl font-bold ${textColor}`}>
+                  <h3 className={`text-3xl md:text-4xl font-bold ${textColor}`}>
                     {currentStep.title}
                   </h3>
                 </div>
               </div>
-              <p className={`text-xl ${secondaryTextColor} italic`}>
+              <p className={`text-xl ${secondaryTextColor} italic font-medium`}>
                 {currentStep.description}
               </p>
             </div>
