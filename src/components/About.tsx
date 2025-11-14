@@ -30,7 +30,7 @@ export default function About() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="hidden sm:grid grid-cols-2 gap-4 mb-8">
             <img
               src="https://i.ibb.co/DfPR3pgb/SAR02063.jpg"
               alt="Walk for Hope Event"
@@ -42,6 +42,12 @@ export default function About() {
               className="w-full h-auto rounded-2xl shadow-lg object-cover"
             />
           </div>
+
+          <img
+            src="https://i.ibb.co/DfPR3pgb/SAR02063.jpg"
+            alt="Walk for Hope Event"
+            className="sm:hidden w-full h-auto rounded-2xl shadow-lg object-cover mb-8"
+          />
 
           <div className="bg-white rounded-2xl shadow-xl p-8 sm:p-10 md:p-12 mb-8">
             <div className="prose prose-lg max-w-none">
@@ -58,6 +64,12 @@ export default function About() {
               </p>
             </div>
           </div>
+
+          <img
+            src="https://i.ibb.co/MyS8L7dV/IMG-WFH-013.png"
+            alt="Walk for Hope Community"
+            className="sm:hidden w-full h-auto rounded-2xl shadow-lg object-cover mb-8"
+          />
 
           <div className="grid sm:grid-cols-2 gap-6 mb-8">
             <div className="bg-gradient-to-br from-foh-light-green to-foh-mid-green rounded-2xl p-6 sm:p-8 text-white shadow-lg transform hover:scale-105 transition-transform duration-300">

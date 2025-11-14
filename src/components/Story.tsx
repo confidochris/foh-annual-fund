@@ -89,7 +89,7 @@ export default function Story() {
             </div>
           </div>
 
-          <div className="relative overflow-hidden rounded-xl shadow-lg group">
+          <div className="hidden sm:block relative overflow-hidden rounded-xl shadow-lg group">
             <div className="aspect-square bg-gradient-to-br from-gray-200 to-gray-300">
               <img
                 src="https://i.ibb.co/XxR6DDWh/colombian-family-smiling-very-happy-daughter-mo-2025-03-09-04-08-07-utc.jpg"
