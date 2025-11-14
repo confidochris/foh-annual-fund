@@ -13,15 +13,25 @@ export default function Story() {
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foh-dark-brown mb-4 sm:mb-6 px-4">
-            A Mother's Heartbreak 
+            A Mother's Heartbreak
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto px-4 leading-relaxed">
+          <p className="hidden sm:block text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto px-4 leading-relaxed">
             Marilyn's journey from devastating loss to becoming a champion for mental illness research
           </p>
         </div>
 
+        <div className="sm:hidden aspect-video rounded-xl overflow-hidden shadow-2xl mb-8">
+          <iframe
+            className="w-full h-full"
+            src="https://www.youtube-nocookie.com/embed/q6FW-l7Achw"
+            title="Marilyn's Story"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+
         <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center mb-12 sm:mb-16">
-          <div className="space-y-6 animate-slide-up order-2 lg:order-1">
+          <div className="hidden sm:block space-y-6 animate-slide-up order-2 lg:order-1">
             <div className="aspect-video rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl">
               <iframe
                 className="w-full h-full"

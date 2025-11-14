@@ -30,7 +30,7 @@ function ResearcherCard({ name, title, focus, currentResearch, image, papers, un
             />
           </div>
 
-          <div className="p-6 border-t border-gray-200">
+          <div className="hidden sm:block p-6 border-t border-gray-200">
             <div className="flex items-center gap-2 mb-3">
               <BookOpen className="w-4 h-4 text-foh-light-green flex-shrink-0" />
               <span className="text-sm font-semibold text-foh-dark-brown">Published Papers</span>
@@ -73,19 +73,44 @@ function ResearcherCard({ name, title, focus, currentResearch, image, papers, un
           <div className="flex-1">
             <h4 className="font-semibold text-foh-dark-brown mb-2">Current Research</h4>
             <p className="text-gray-600 text-sm leading-relaxed mb-6">{currentResearch}</p>
-
-            {universityUrl && (
-              <a
-                href={universityUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-foh-mid-green hover:text-foh-light-green transition-colors font-semibold group/learn"
-              >
-                <span>Learn More</span>
-                <ExternalLink className="w-4 h-4 group-hover/learn:translate-x-0.5 group-hover/learn:-translate-y-0.5 transition-transform" />
-              </a>
-            )}
           </div>
+
+          <div className="sm:hidden p-6 border-t border-gray-200 -mx-8 mb-6">
+            <div className="flex items-center gap-2 mb-3">
+              <BookOpen className="w-4 h-4 text-foh-light-green flex-shrink-0" />
+              <span className="text-sm font-semibold text-foh-dark-brown">Published Papers</span>
+            </div>
+            <div className="space-y-2">
+              {papers.length > 0 ? (
+                papers.map((paper, idx) => (
+                  <a
+                    key={idx}
+                    href={paper.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-2 text-sm text-foh-mid-green hover:text-foh-light-green transition-colors group/link"
+                  >
+                    <ExternalLink className="w-4 h-4 mt-0.5 flex-shrink-0 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
+                    <span className="line-clamp-2">{paper.title}</span>
+                  </a>
+                ))
+              ) : (
+                <p className="text-sm text-gray-500 italic">No published papers available at this time.</p>
+              )}
+            </div>
+          </div>
+
+          {universityUrl && (
+            <a
+              href={universityUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-foh-mid-green hover:text-foh-light-green transition-colors font-semibold group/learn"
+            >
+              <span>Learn More</span>
+              <ExternalLink className="w-4 h-4 group-hover/learn:translate-x-0.5 group-hover/learn:-translate-y-0.5 transition-transform" />
+            </a>
+          )}
         </div>
       </div>
     </div>

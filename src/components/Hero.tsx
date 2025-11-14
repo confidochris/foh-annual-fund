@@ -34,7 +34,7 @@ export default function Hero() {
           </h1>
 
           <p className="text-lg sm:text-xl md:text-2xl text-gray-700 mb-8 sm:mb-10 max-w-3xl mx-auto leading-relaxed px-4">
-            The mental health crisis is <span className="font-bold" style={{ color: '#006838' }}>REAL</span>. The time to act is <span className="font-bold" style={{ color: '#006838' }}>NOW</span>.
+            The mental health crisis is <span className="font-bold" style={{ color: '#006838' }}>REAL</span>.<br className="sm:hidden" /> The time to act is <span className="font-bold" style={{ color: '#006838' }}>NOW</span>.
           </p>
 
           <div className="flex flex-col md:flex-row gap-4 md:gap-6 justify-center items-stretch mb-8 sm:mb-12 mx-4">
