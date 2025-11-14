@@ -132,7 +132,7 @@ export default function StickyNav() {
         >
           <div className="flex flex-col h-full">
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200">
+            <div className="flex items-center justify-between py-4 border-b border-gray-200 mx-4">
               <img
                 src="https://i.ibb.co/p62nSHVy/Fo-H-Logo-Horizontal-Tagline-Full-Color.png"
                 alt="Foundation of Hope"

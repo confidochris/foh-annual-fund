@@ -8,12 +8,18 @@ export default function FloatingCTA() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      const shouldShow = scrollPosition > 800 && !isDismissed;
+      const isMobile = window.innerWidth < 768;
+      const shouldShow = isMobile ? !isDismissed : scrollPosition > 800 && !isDismissed;
       setIsVisible(shouldShow);
     };
 
+    handleScroll();
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, [isDismissed]);
 
   const scrollToDonate = () => {
