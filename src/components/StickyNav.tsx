@@ -136,7 +136,7 @@ export default function StickyNav() {
               <img
                 src="https://i.ibb.co/p62nSHVy/Fo-H-Logo-Horizontal-Tagline-Full-Color.png"
                 alt="Foundation of Hope"
-                className="h-8 w-auto ml-7"
+                className="h-8 w-auto ml-9"
               />
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
