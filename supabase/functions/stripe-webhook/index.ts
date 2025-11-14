@@ -106,10 +106,12 @@ Deno.serve(async (req: Request) => {
             const emailPayload = {
               from: 'Foundation of Hope <donations@walkforhope.com>',
               to: [donor.email],
-              template_uuid: templateId,
-              template_data: {
-                FIRST_NAME: donor.first_name,
-                AMOUNT: donation.amount.toFixed(2)
+              template: {
+                id: templateId,
+                variables: {
+                  FIRST_NAME: donor.first_name,
+                  AMOUNT: donation.amount.toFixed(2)
+                }
               }
             };
 
