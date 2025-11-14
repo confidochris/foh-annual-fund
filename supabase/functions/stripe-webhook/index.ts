@@ -103,19 +103,30 @@ Deno.serve(async (req: Request) => {
           console.log('Attempting to send email to:', donor.email, 'with template:', templateId);
 
           try {
-            const emailResponse = await resend.emails.send({
-              from: 'Foundation of Hope <donations@walkforhope.com>',
-              to: donor.email,
-              template_id: templateId,
-              template_data: {
-                first_name: donor.first_name,
-                amount: donation.amount.toFixed(2)
-              }
+            const response = await fetch('https://api.resend.com/emails', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${RESEND_API_KEY}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                from: 'Foundation of Hope <donations@walkforhope.com>',
+                to: [donor.email],
+                subject: 'Thank you for your donation',
+                template_id: templateId,
+                template_data: {
+                  first_name: donor.first_name,
+                  amount: donation.amount.toFixed(2)
+                }
+              })
             });
 
-            console.log('Resend API response:', JSON.stringify(emailResponse));
+            const emailResponse = await response.json();
 
-            if (emailResponse.error) {
+            console.log('Resend API response:', JSON.stringify(emailResponse));
+            console.log('Resend status code:', response.status);
+
+            if (!response.ok || emailResponse.error) {
               console.error('Resend returned error:', emailResponse.error);
               
               await supabase
