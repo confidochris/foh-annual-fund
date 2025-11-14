@@ -38,6 +38,14 @@ export default function Hero() {
           </p>
 
           <div className="flex flex-col md:flex-row gap-4 md:gap-6 justify-center items-stretch mb-8 sm:mb-12 mx-4">
+            <div className="rounded-lg border-4 border-foh-light-green shadow-xl overflow-hidden w-full md:w-80 h-full">
+              <img
+                src="https://i.ibb.co/LzFLB8qB/48955427791-119a6d1f1b-k.jpg"
+                alt="Foundation of Hope Community"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
             <div className="bg-white rounded-lg border-4 border-foh-light-green shadow-xl p-6 sm:p-8 w-full md:w-80 flex flex-col justify-center">
               <div className="text-xs sm:text-sm md:text-base font-semibold tracking-[0.3em] mb-2" style={{ color: '#2BB673' }}>
                 OUR GOAL
