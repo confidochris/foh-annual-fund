@@ -103,17 +103,32 @@ Deno.serve(async (req: Request) => {
           console.log('Attempting to send email to:', donor.email, 'with template:', templateId);
 
           try {
-            const emailResponse = await resend.emails.send({
+            const emailPayload = {
               from: 'Foundation of Hope <donations@walkforhope.com>',
-              to: donor.email,
-              subject: 'Thank you for your donation',
-              html: `<p>Thank you ${donor.first_name} for your $${donation.amount.toFixed(2)} donation!</p>`
+              to: [donor.email],
+              template_uuid: templateId,
+              template_data: {
+                FIRST_NAME: donor.first_name,
+                AMOUNT: donation.amount.toFixed(2)
+              }
+            };
+
+            console.log('Sending email with payload:', JSON.stringify(emailPayload));
+
+            const response = await fetch('https://api.resend.com/emails', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${RESEND_API_KEY}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(emailPayload),
             });
 
+            const emailResponse = await response.json();
             console.log('Resend API response:', JSON.stringify(emailResponse));
 
-            if (emailResponse.error) {
-              console.error('Resend returned error:', emailResponse.error);
+            if (emailResponse.error || !response.ok) {
+              console.error('Resend returned error:', emailResponse.error || emailResponse);
               
               await supabase
                 .from('donation_events')
@@ -121,14 +136,14 @@ Deno.serve(async (req: Request) => {
                   donation_id: donationId,
                   event_type: 'email_failed',
                   event_data: { 
-                    error: emailResponse.error,
+                    error: emailResponse.error || emailResponse,
                     email: donor.email,
                     template_id: templateId
                   },
                   source: 'stripe-webhook',
                 });
             } else {
-              console.log('Email sent successfully to:', donor.email, 'ID:', emailResponse.data?.id);
+              console.log('Email sent successfully to:', donor.email, 'ID:', emailResponse.id);
 
               await supabase
                 .from('donation_events')
@@ -140,7 +155,7 @@ Deno.serve(async (req: Request) => {
                     type: isRecurring ? 'recurring' : 'one_time',
                     provider: 'resend',
                     template_id: templateId,
-                    email_id: emailResponse.data?.id
+                    email_id: emailResponse.id
                   },
                   source: 'stripe-webhook',
                 });
