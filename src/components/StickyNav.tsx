@@ -132,11 +132,11 @@ export default function StickyNav() {
         >
           <div className="flex flex-col h-full">
             {/* Header */}
-            <div className="flex items-center justify-between py-4 border-b border-gray-200 mx-4">
+            <div className="flex items-center justify-between py-4 border-b border-gray-200 mr-4">
               <img
                 src="https://i.ibb.co/p62nSHVy/Fo-H-Logo-Horizontal-Tagline-Full-Color.png"
                 alt="Foundation of Hope"
-                className="h-8 w-auto"
+                className="h-8 w-auto ml-4"
               />
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
