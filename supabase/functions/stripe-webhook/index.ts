@@ -10,8 +10,8 @@ const corsHeaders = {
 };
 
 const RESEND_API_KEY = 're_6HqjnGXg_JHJuDBE71F9F7iC212aXCW7Y';
-const ONE_TIME_TEMPLATE_ID = 'f32637a1-e23e-475a-b10a-1027e511f6ce';
-const RECURRING_TEMPLATE_ID = '0d15502a-7950-4687-a460-3790a6275990';
+const ONE_TIME_TEMPLATE_ID = '2de40521-1af5-4ee3-9029-17422faeb2da';
+const RECURRING_TEMPLATE_ID = '59568a21-5452-4411-90b9-5cf63464f14b';
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
@@ -107,7 +107,11 @@ Deno.serve(async (req: Request) => {
               from: 'Foundation of Hope <donations@walkforhope.com>',
               to: donor.email,
               template: {
-                id: templateId
+                id: templateId,
+                data: {
+                  FIRST_NAME: donor.first_name,
+                  AMOUNT: donation.amount.toFixed(2)
+                }
               },
             });
 
