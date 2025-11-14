@@ -119,55 +119,62 @@ export default function StickyNav() {
 
       {/* Mobile Menu Overlay */}
       <div
-        className={`fixed inset-0 z-50 bg-white transition-transform duration-300 md:hidden ${
-          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed inset-0 z-50 bg-black/50 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
+          isMobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
+        onClick={() => setIsMobileMenuOpen(false)}
       >
-        <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200">
-            <a
-              href="https://www.walkforhope.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center"
-            >
+        <div
+          className={`absolute right-0 top-0 h-full w-80 bg-white/95 backdrop-blur-md shadow-2xl transition-transform duration-300 ${
+            isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex flex-col h-full">
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200">
               <img
                 src="https://i.ibb.co/p62nSHVy/Fo-H-Logo-Horizontal-Tagline-Full-Color.png"
                 alt="Foundation of Hope"
-                className="h-10 w-auto"
+                className="h-8 w-auto"
               />
-            </a>
-            <button
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-              aria-label="Close menu"
-            >
-              <X className="w-8 h-8 text-gray-700" />
-            </button>
-          </div>
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                aria-label="Close menu"
+              >
+                <X className="w-6 h-6 text-gray-700" />
+              </button>
+            </div>
 
-          {/* Navigation Links */}
-          <div className="flex-1 flex flex-col justify-center px-6 py-8 space-y-4">
-            <button
-              onClick={() => handleNavClick('#donate')}
-              className="flex items-center justify-center gap-3 px-8 py-5 bg-gradient-to-r from-foh-light-green to-foh-mid-green text-white rounded-2xl font-bold text-xl shadow-lg"
-            >
-              <Heart className="w-6 h-6 fill-white" />
-              Donate Now
-            </button>
+            {/* Navigation Links */}
+            <div className="flex-1 flex flex-col px-4 py-6 bg-white/90 rounded-lg m-4">
+              <button
+                onClick={() => handleNavClick('#donate')}
+                className="flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-foh-light-green to-foh-mid-green text-white rounded-xl font-bold text-base shadow-lg mb-3"
+              >
+                <Heart className="w-5 h-5 fill-white" />
+                Donate Now
+              </button>
 
-            {navItems.map((item) =>
-              !item.isDonate ? (
-                <button
-                  key={item.label}
-                  onClick={() => handleNavClick(item.href)}
-                  className="px-8 py-5 text-left text-foh-dark-brown font-semibold text-xl rounded-2xl bg-gray-50 border-2 border-gray-300 hover:border-foh-light-green hover:bg-foh-light-green/20 transition-all duration-200 shadow-sm"
-                >
-                  {item.label}
-                </button>
-              ) : null
-            )}
+              <div className="space-y-1">
+                {navItems.map((item) =>
+                  !item.isDonate ? (
+                    <button
+                      key={item.label}
+                      onClick={() => handleNavClick(item.href)}
+                      className={`w-full px-4 py-3 text-left font-semibold text-base rounded-lg transition-all duration-200 ${
+                        activeSection === item.href
+                          ? 'bg-foh-light-green/20 text-foh-dark-brown'
+                          : 'text-gray-700 hover:bg-gray-100'
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  ) : null
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
