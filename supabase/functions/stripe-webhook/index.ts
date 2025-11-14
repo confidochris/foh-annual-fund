@@ -106,11 +106,8 @@ Deno.serve(async (req: Request) => {
             const emailResponse = await resend.emails.send({
               from: 'Foundation of Hope <donations@walkforhope.com>',
               to: donor.email,
-              react: templateId,
-              react_props: {
-                FIRST_NAME: donor.first_name,
-                AMOUNT: donation.amount.toFixed(2)
-              }
+              subject: 'Thank you for your donation',
+              html: `<p>Thank you ${donor.first_name} for your $${donation.amount.toFixed(2)} donation!</p>`
             });
 
             console.log('Resend API response:', JSON.stringify(emailResponse));
