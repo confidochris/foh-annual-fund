@@ -38,7 +38,7 @@ export default function Hero() {
           </p>
 
           <div className="flex flex-col md:flex-row gap-4 md:gap-6 justify-center items-stretch mb-8 sm:mb-12 mx-4">
-            <div className="rounded-lg border-4 border-foh-light-green shadow-xl overflow-hidden w-full md:w-80 h-full order-1 md:order-1">
+            <div className="rounded-lg border-4 border-foh-light-green shadow-xl overflow-hidden w-full md:w-80 h-full order-2 md:order-1">
               <img
                 src="https://i.ibb.co/LzFLB8qB/48955427791-119a6d1f1b-k.jpg"
                 alt="Foundation of Hope Community"
@@ -46,7 +46,7 @@ export default function Hero() {
               />
             </div>
 
-            <div className="bg-white rounded-lg border-4 border-foh-light-green shadow-xl p-6 sm:p-8 w-full md:w-80 flex flex-col justify-center order-3 md:order-2">
+            <div className="bg-white rounded-lg border-4 border-foh-light-green shadow-xl p-6 sm:p-8 w-full md:w-80 flex flex-col justify-center order-1 md:order-2">
               <div className="text-xs sm:text-sm md:text-base font-semibold tracking-[0.3em] mb-2" style={{ color: '#2BB673' }}>
                 OUR GOAL
               </div>
@@ -58,7 +58,7 @@ export default function Hero() {
               </div>
             </div>
 
-            <div className="rounded-lg border-4 border-foh-light-green shadow-xl overflow-hidden w-full md:w-80 h-full order-2 md:order-3">
+            <div className="rounded-lg border-4 border-foh-light-green shadow-xl overflow-hidden w-full md:w-80 h-full order-3 md:order-3">
               <img
                 src="https://i.ibb.co/B2pnLNxj/Walk4-Hope-Hi-251-min.jpg"
                 alt="Walk for Hope"
