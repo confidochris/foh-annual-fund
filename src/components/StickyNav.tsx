@@ -148,7 +148,7 @@ export default function StickyNav() {
             </div>
 
             {/* Navigation Links */}
-            <div className="flex-1 flex flex-col px-4 py-6 bg-white/90 rounded-lg m-4">
+            <div className="flex flex-col px-4 py-4 bg-white/90 rounded-lg m-4">
               <button
                 onClick={() => handleNavClick('#donate')}
                 className="flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-foh-light-green to-foh-mid-green text-white rounded-xl font-bold text-base shadow-lg mb-3"
