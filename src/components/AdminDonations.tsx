@@ -503,13 +503,13 @@ export default function AdminDonations() {
                             donation.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
                             'bg-red-100 text-red-700'
                           }`}>
-                            {donation.status.charAt(0).toUpperCase() + donation.status.slice(1)}
+                            {donation.status ? donation.status.charAt(0).toUpperCase() + donation.status.slice(1) : 'Unknown'}
                           </span>
                         </td>
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-2 text-sm text-gray-700">
                             <CreditCard className="w-4 h-4 text-gray-400" />
-                            {donation.payment_method.charAt(0).toUpperCase() + donation.payment_method.slice(1)}
+                            {donation.payment_method ? donation.payment_method.charAt(0).toUpperCase() + donation.payment_method.slice(1) : 'N/A'}
                           </div>
                         </td>
                       </tr>
