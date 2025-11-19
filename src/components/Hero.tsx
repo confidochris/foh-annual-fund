@@ -92,8 +92,8 @@ export default function Hero() {
             The mental health crisis is <span className="font-bold" style={{ color: '#006838' }}>REAL</span>.<br className="sm:hidden" /> The time to act is <span className="font-bold" style={{ color: '#006838' }}>NOW</span>.
           </p>
 
-          <div className="flex flex-col md:flex-row gap-4 md:gap-6 justify-center items-stretch mb-8 sm:mb-12 mx-4">
-            <div className="rounded-lg border-4 border-foh-light-green shadow-xl overflow-hidden w-full md:w-80 h-full order-1 md:order-1">
+          <div className="flex flex-col md:flex-row gap-4 md:gap-6 justify-center items-center mb-8 sm:mb-12 mx-4">
+            <div className="rounded-lg border-4 border-foh-light-green shadow-xl overflow-hidden w-full md:w-80 order-1 md:order-1">
               <img
                 src="https://i.ibb.co/B2pnLNxj/Walk4-Hope-Hi-251-min.jpg"
                 alt="Walk for Hope"
@@ -130,7 +130,7 @@ export default function Hero() {
               </div>
             </div>
 
-            <div className="rounded-lg border-4 border-foh-light-green shadow-xl overflow-hidden w-full md:w-80 h-full order-3 md:order-3">
+            <div className="rounded-lg border-4 border-foh-light-green shadow-xl overflow-hidden w-full md:w-80 order-3 md:order-3">
               <img
                 src="https://i.ibb.co/LzFLB8qB/48955427791-119a6d1f1b-k.jpg"
                 alt="Foundation of Hope Community"
