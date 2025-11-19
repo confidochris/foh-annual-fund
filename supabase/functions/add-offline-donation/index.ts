@@ -20,7 +20,7 @@ Deno.serve(async (req: Request) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const { amount, donor_name, donor_email, notes } = await req.json();
+    const { amount, first_name, last_name, donor_email, notes } = await req.json();
 
     if (!amount || amount <= 0) {
       return new Response(
@@ -37,10 +37,9 @@ Deno.serve(async (req: Request) => {
 
     let donorId = null;
 
-    if (donor_name || donor_email) {
-      const nameParts = donor_name ? donor_name.trim().split(/\s+/) : ['', ''];
-      const firstName = nameParts[0] || '';
-      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+    if (first_name || last_name || donor_email) {
+      const firstName = first_name?.trim() || '';
+      const lastName = last_name?.trim() || '';
 
       if (donor_email) {
         const { data: existingDonor } = await supabase

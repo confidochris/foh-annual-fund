@@ -20,9 +20,21 @@ interface Donation {
   };
 }
 
+interface DonorDetails {
+  first_name: string;
+  last_name: string;
+  email: string;
+  organization: string | null;
+  referral_source: string | null;
+  referral_custom: string | null;
+  amount: string;
+  created_at: string;
+}
+
 export default function AdminDonations() {
   const [amount, setAmount] = useState('');
-  const [donorName, setDonorName] = useState('');
+  const [donorFirstName, setDonorFirstName] = useState('');
+  const [donorLastName, setDonorLastName] = useState('');
   const [donorEmail, setDonorEmail] = useState('');
   const [notes, setNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,7 +49,7 @@ export default function AdminDonations() {
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
-  const [selectedDonor, setSelectedDonor] = useState<Donation['donors'] | null>(null);
+  const [selectedDonor, setSelectedDonor] = useState<DonorDetails | null>(null);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -112,7 +124,8 @@ export default function AdminDonations() {
           },
           body: JSON.stringify({
             amount: parseFloat(amount),
-            donor_name: donorName || null,
+            first_name: donorFirstName || null,
+            last_name: donorLastName || null,
             donor_email: donorEmail || null,
             notes: notes || null,
           }),
@@ -124,7 +137,8 @@ export default function AdminDonations() {
       if (response.ok) {
         setMessage({ type: 'success', text: `Successfully added donation of $${amount}` });
         setAmount('');
-        setDonorName('');
+        setDonorFirstName('');
+        setDonorLastName('');
         setDonorEmail('');
         setNotes('');
         fetchDonations();
@@ -240,35 +254,26 @@ export default function AdminDonations() {
               <h2 className="text-2xl font-bold text-foh-dark-brown mb-1">All Donations</h2>
               <p className="text-gray-600">View, filter, and export donation records</p>
             </div>
-            <button
-              onClick={exportToCSV}
-              disabled={filteredDonations.length === 0}
-              className="flex items-center gap-2 px-4 py-2 bg-foh-mid-green text-white rounded-lg font-semibold hover:bg-foh-light-green transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Download className="w-4 h-4" />
-              Export CSV
-            </button>
-          </div>
-
-          <div className="flex items-center gap-3 mb-4">
-            <button
-              onClick={() => setStatusFilter('pending')}
-              className="flex items-center gap-2 px-4 py-2 bg-yellow-100 text-yellow-700 rounded-lg font-medium hover:bg-yellow-200 transition-colors text-sm"
-            >
-              <AlertCircle className="w-4 h-4" />
-              View Abandoned Donations
-            </button>
-            {statusFilter === 'pending' && (
+            <div className="flex flex-col items-end gap-2">
               <button
-                onClick={() => setStatusFilter('completed')}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors text-sm"
+                onClick={exportToCSV}
+                disabled={filteredDonations.length === 0}
+                className="flex items-center gap-2 px-4 py-2 bg-foh-mid-green text-white rounded-lg font-semibold hover:bg-foh-light-green transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Back to Completed
+                <Download className="w-4 h-4" />
+                Export CSV
               </button>
-            )}
+              <button
+                onClick={() => setStatusFilter(statusFilter === 'pending' ? 'completed' : 'pending')}
+                className="flex items-center gap-2 px-4 py-2 bg-yellow-100 text-yellow-700 rounded-lg font-medium hover:bg-yellow-200 transition-colors text-sm"
+              >
+                <AlertCircle className="w-4 h-4" />
+                {statusFilter === 'pending' ? 'Back to Completed' : 'View Abandoned Donations'}
+              </button>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
@@ -301,22 +306,20 @@ export default function AdminDonations() {
               <option value="recurring">Recurring</option>
             </select>
 
-            <div className="flex gap-2">
-              <input
-                type="date"
-                value={dateFrom}
-                onChange={(e) => setDateFrom(e.target.value)}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-foh-mid-green focus:border-transparent outline-none"
-                placeholder="From"
-              />
-              <input
-                type="date"
-                value={dateTo}
-                onChange={(e) => setDateTo(e.target.value)}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-foh-mid-green focus:border-transparent outline-none"
-                placeholder="To"
-              />
-            </div>
+            <input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => setDateFrom(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-foh-mid-green focus:border-transparent outline-none"
+              placeholder="From"
+            />
+            <input
+              type="date"
+              value={dateTo}
+              onChange={(e) => setDateTo(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-foh-mid-green focus:border-transparent outline-none"
+              placeholder="To"
+            />
           </div>
 
           <div className="bg-foh-lime/10 rounded-lg p-4 mb-6">
@@ -371,8 +374,8 @@ export default function AdminDonations() {
                   {filteredDonations.map((donation) => {
                     const donorName = donation.donors
                       ? `${donation.donors.first_name} ${donation.donors.last_name}`
-                      : (donation.metadata?.donor_name || 'Anonymous');
-                    const donorEmail = donation.donors?.email || donation.metadata?.donor_email || '';
+                      : 'Anonymous';
+                    const donorEmail = donation.donors?.email || '';
                     const notes = donation.metadata?.notes || '';
 
                     return (
@@ -392,7 +395,7 @@ export default function AdminDonations() {
                             <div>
                               {donation.donors ? (
                                 <button
-                                  onClick={() => setSelectedDonor(donation.donors || null)}
+                                  onClick={() => setSelectedDonor({ ...donation.donors!, amount: donation.amount, created_at: donation.created_at } as any)}
                                   className="font-medium text-foh-mid-green hover:text-foh-light-green underline text-left"
                                 >
                                   {donorName}
@@ -473,18 +476,33 @@ export default function AdminDonations() {
               </div>
             </div>
 
-            <div>
-              <label htmlFor="donorName" className="block text-sm font-semibold text-foh-dark-brown mb-2">
-                Donor Name (Optional)
-              </label>
-              <input
-                type="text"
-                id="donorName"
-                value={donorName}
-                onChange={(e) => setDonorName(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-foh-mid-green focus:border-transparent outline-none transition-all"
-                placeholder="John Doe"
-              />
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="donorFirstName" className="block text-sm font-semibold text-foh-dark-brown mb-2">
+                  First Name (Optional)
+                </label>
+                <input
+                  type="text"
+                  id="donorFirstName"
+                  value={donorFirstName}
+                  onChange={(e) => setDonorFirstName(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-foh-mid-green focus:border-transparent outline-none transition-all"
+                  placeholder="John"
+                />
+              </div>
+              <div>
+                <label htmlFor="donorLastName" className="block text-sm font-semibold text-foh-dark-brown mb-2">
+                  Last Name (Optional)
+                </label>
+                <input
+                  type="text"
+                  id="donorLastName"
+                  value={donorLastName}
+                  onChange={(e) => setDonorLastName(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-foh-mid-green focus:border-transparent outline-none transition-all"
+                  placeholder="Doe"
+                />
+              </div>
             </div>
 
             <div>
@@ -588,6 +606,16 @@ export default function AdminDonations() {
                     <div className="text-gray-700">{selectedDonor.email}</div>
                   </div>
                 )}
+
+                <div>
+                  <div className="text-sm font-semibold text-gray-600 mb-1">Amount</div>
+                  <div className="text-xl font-bold text-foh-mid-green">${parseFloat(selectedDonor.amount).toLocaleString()}</div>
+                </div>
+
+                <div>
+                  <div className="text-sm font-semibold text-gray-600 mb-1">Date</div>
+                  <div className="text-gray-700">{new Date(selectedDonor.created_at).toLocaleDateString()} at {new Date(selectedDonor.created_at).toLocaleTimeString()}</div>
+                </div>
 
                 {selectedDonor.organization && (
                   <div>
