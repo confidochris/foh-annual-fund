@@ -270,7 +270,7 @@ export default function DonationForm() {
             <div className="space-y-6 animate-fadeIn">
               <div className="mb-8 sm:mb-10">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 mb-4">
-                  <span className="text-base sm:text-lg font-semibold text-foh-dark-brown">Campaign Progress</span>
+                  <span className="text-base sm:text-lg font-semibold text-foh-dark-brown">Annual Fund Progress</span>
                   <span className="text-xl sm:text-2xl font-bold text-foh-light-green">
                     {isLoadingProgress ? '...' : `$${currentAmount.toLocaleString()}`}
                   </span>

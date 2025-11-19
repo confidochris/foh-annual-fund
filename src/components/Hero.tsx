@@ -150,7 +150,7 @@ export default function Hero() {
           <div className="mt-8 mx-4 max-w-2xl mx-auto">
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl border-2 border-foh-light-green/30 shadow-lg p-6">
               <div className="flex justify-between items-baseline mb-3">
-                <span className="text-base sm:text-lg font-semibold text-foh-dark-brown">Campaign Progress</span>
+                <span className="text-base sm:text-lg font-semibold text-foh-dark-brown">Annual Fund Progress</span>
                 <span className="text-xl sm:text-2xl font-bold text-foh-light-green">
                   {isLoadingProgress ? '...' : `$${currentAmount.toLocaleString()}`}
                 </span>
