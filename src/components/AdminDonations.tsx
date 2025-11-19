@@ -167,13 +167,22 @@ export default function AdminDonations() {
   };
 
   const filteredDonations = donations.filter(donation => {
+    const firstName = donation.donors?.first_name?.toLowerCase() || '';
+    const lastName = donation.donors?.last_name?.toLowerCase() || '';
+    const fullName = `${firstName} ${lastName}`.trim();
+    const email = donation.donors?.email?.toLowerCase() || '';
+    const organization = donation.donors?.organization?.toLowerCase() || '';
+    const query = searchQuery.toLowerCase().trim();
+
     const matchesSearch = searchQuery === '' ||
-      donation.donors?.first_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      donation.donors?.last_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      donation.donors?.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      donation.metadata?.donor_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      donation.metadata?.donor_email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      donation.amount.toString().includes(searchQuery);
+      firstName.includes(query) ||
+      lastName.includes(query) ||
+      fullName.includes(query) ||
+      email.includes(query) ||
+      organization.includes(query) ||
+      donation.metadata?.donor_name?.toLowerCase().includes(query) ||
+      donation.metadata?.donor_email?.toLowerCase().includes(query) ||
+      donation.amount.toString().includes(query);
 
     const matchesStatus = statusFilter === 'all' || donation.status === statusFilter;
     const matchesType = typeFilter === 'all' || donation.donation_type === typeFilter;
@@ -330,7 +339,7 @@ export default function AdminDonations() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search by name, email, or amount..."
+                placeholder="Search by name, email, organization, or amount..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-foh-mid-green focus:border-transparent outline-none"
