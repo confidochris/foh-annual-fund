@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DollarSign, Plus, AlertCircle, CheckCircle, Download, Filter, Search, Calendar, CreditCard, User } from 'lucide-react';
+import { DollarSign, Plus, AlertCircle, CheckCircle, Download, Filter, Search, Calendar, CreditCard, User, RefreshCw } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface Donation {
@@ -44,6 +44,7 @@ export default function AdminDonations() {
 
   const [donations, setDonations] = useState<Donation[]>([]);
   const [isLoadingDonations, setIsLoadingDonations] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('completed');
   const [typeFilter, setTypeFilter] = useState<string>('all');
@@ -68,9 +69,13 @@ export default function AdminDonations() {
     }
   }, [isAuthenticated]);
 
-  const fetchDonations = async () => {
+  const fetchDonations = async (isManualRefresh = false) => {
     try {
-      setIsLoadingDonations(true);
+      if (isManualRefresh) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoadingDonations(true);
+      }
       const { data, error } = await supabase
         .from('donations')
         .select(`
@@ -95,8 +100,16 @@ export default function AdminDonations() {
     } catch (error) {
       console.error('Error fetching donations:', error);
     } finally {
-      setIsLoadingDonations(false);
+      if (isManualRefresh) {
+        setIsRefreshing(false);
+      } else {
+        setIsLoadingDonations(false);
+      }
     }
+  };
+
+  const handleManualRefresh = () => {
+    fetchDonations(true);
   };
 
   const handleAuth = (e: React.FormEvent) => {
@@ -284,14 +297,24 @@ export default function AdminDonations() {
               <p className="text-gray-600">View, filter, and export donation records</p>
             </div>
             <div className="flex flex-col items-end gap-2">
-              <button
-                onClick={exportToCSV}
-                disabled={filteredDonations.length === 0}
-                className="flex items-center gap-2 px-4 py-2 bg-foh-mid-green text-white rounded-lg font-semibold hover:bg-foh-light-green transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Download className="w-4 h-4" />
-                Export CSV
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={handleManualRefresh}
+                  disabled={isRefreshing}
+                  className="flex items-center gap-2 px-4 py-2 bg-foh-blue text-white rounded-lg font-semibold hover:bg-foh-blue/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                  {isRefreshing ? 'Refreshing...' : 'Refresh'}
+                </button>
+                <button
+                  onClick={exportToCSV}
+                  disabled={filteredDonations.length === 0}
+                  className="flex items-center gap-2 px-4 py-2 bg-foh-mid-green text-white rounded-lg font-semibold hover:bg-foh-light-green transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Download className="w-4 h-4" />
+                  Export CSV
+                </button>
+              </div>
               <button
                 onClick={() => setStatusFilter(statusFilter === 'pending' ? 'completed' : 'pending')}
                 className="flex items-center gap-2 px-4 py-2 bg-yellow-100 text-yellow-700 rounded-lg font-medium hover:bg-yellow-200 transition-colors text-sm"
