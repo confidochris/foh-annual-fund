@@ -1,6 +1,61 @@
 import { ArrowRight, Play } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 
 export default function Hero() {
+  const [currentAmount, setCurrentAmount] = useState(0);
+  const [goalAmount, setGoalAmount] = useState(100000);
+  const [isLoadingProgress, setIsLoadingProgress] = useState(true);
+
+  const progressPercentage = (currentAmount / goalAmount) * 100;
+
+  useEffect(() => {
+    fetchDonationProgress();
+
+    const channel = supabase
+      .channel('donations-changes-hero')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'donations' }, () => {
+        fetchDonationProgress();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const fetchDonationProgress = async () => {
+    try {
+      const [donationsResult, settingsResult] = await Promise.all([
+        supabase
+          .from('donations')
+          .select('amount, status')
+          .eq('status', 'completed'),
+        supabase
+          .from('campaign_settings')
+          .select('goal_amount')
+          .single()
+      ]);
+
+      if (donationsResult.error) {
+        console.error('Error fetching donations:', donationsResult.error);
+      } else {
+        const totalRaised = donationsResult.data?.reduce((sum, d) => sum + parseFloat(d.amount), 0) || 0;
+        setCurrentAmount(totalRaised);
+      }
+
+      if (settingsResult.error) {
+        console.error('Error fetching campaign settings:', settingsResult.error);
+      } else if (settingsResult.data) {
+        setGoalAmount(Number(settingsResult.data.goal_amount));
+      }
+    } catch (error) {
+      console.error('Error fetching donation progress:', error);
+    } finally {
+      setIsLoadingProgress(false);
+    }
+  };
+
   const scrollToStory = () => {
     document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -90,6 +145,31 @@ export default function Hero() {
             >
               See How Hope Unfolds
             </button>
+          </div>
+
+          <div className="mt-8 mx-4 max-w-2xl mx-auto">
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl border-2 border-foh-light-green/30 shadow-lg p-6">
+              <div className="flex justify-between items-baseline mb-3">
+                <span className="text-base sm:text-lg font-semibold text-foh-dark-brown">Campaign Progress</span>
+                <span className="text-xl sm:text-2xl font-bold text-foh-light-green">
+                  {isLoadingProgress ? '...' : `$${currentAmount.toLocaleString()}`}
+                </span>
+              </div>
+
+              <div className="relative h-3 sm:h-4 bg-gray-200 rounded-full overflow-hidden mb-2">
+                <div
+                  className="absolute inset-0 bg-gradient-to-r from-foh-light-green to-foh-mid-green transition-all duration-500"
+                  style={{ width: `${progressPercentage}%` }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
+                </div>
+              </div>
+
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>{progressPercentage.toFixed(1)}% of goal</span>
+                <span>Goal: ${goalAmount.toLocaleString()}</span>
+              </div>
+            </div>
           </div>
 
           <button
