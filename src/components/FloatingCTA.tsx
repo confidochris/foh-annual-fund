@@ -9,8 +9,20 @@ export default function FloatingCTA() {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
       const isMobile = window.innerWidth < 768;
-      const shouldShow = isMobile ? !isDismissed : scrollPosition > 800 && !isDismissed;
+
+      const donateSection = document.getElementById('donate');
+      const isInDonateSection = donateSection ? isElementInViewport(donateSection) : false;
+
+      const shouldShow = !isDismissed && !isInDonateSection && (isMobile || scrollPosition > 800);
       setIsVisible(shouldShow);
+    };
+
+    const isElementInViewport = (el: HTMLElement) => {
+      const rect = el.getBoundingClientRect();
+      return (
+        rect.top <= window.innerHeight &&
+        rect.bottom >= 0
+      );
     };
 
     handleScroll();
