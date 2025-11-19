@@ -89,6 +89,7 @@ export default function AdminDonations() {
       if (error) {
         console.error('Error fetching donations:', error);
       } else {
+        console.log('Fetched donations:', data);
         setDonations(data || []);
       }
     } catch (error) {
