@@ -14,6 +14,9 @@ interface Donation {
     first_name: string;
     last_name: string;
     email: string;
+    organization: string | null;
+    referral_source: string | null;
+    referral_custom: string | null;
   };
 }
 
@@ -34,6 +37,7 @@ export default function AdminDonations() {
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
+  const [selectedDonor, setSelectedDonor] = useState<Donation['donors'] | null>(null);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -62,7 +66,10 @@ export default function AdminDonations() {
           donors (
             first_name,
             last_name,
-            email
+            email,
+            organization,
+            referral_source,
+            referral_custom
           )
         `)
         .order('created_at', { ascending: false });
@@ -383,7 +390,16 @@ export default function AdminDonations() {
                           <div className="flex items-start gap-2">
                             <User className="w-4 h-4 text-gray-400 mt-0.5" />
                             <div>
-                              <div className="font-medium text-foh-dark-brown">{donorName}</div>
+                              {donation.donors ? (
+                                <button
+                                  onClick={() => setSelectedDonor(donation.donors || null)}
+                                  className="font-medium text-foh-mid-green hover:text-foh-light-green underline text-left"
+                                >
+                                  {donorName}
+                                </button>
+                              ) : (
+                                <div className="font-medium text-foh-dark-brown">{donorName}</div>
+                              )}
                               {donorEmail && (
                                 <div className="text-xs text-gray-500">{donorEmail}</div>
                               )}
@@ -536,6 +552,64 @@ export default function AdminDonations() {
             </p>
           </div>
         </div>
+
+        {selectedDonor && (
+          <div
+            className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+            onClick={() => setSelectedDonor(null)}
+          >
+            <div
+              className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold text-foh-dark-brown">Donor Information</h3>
+                <button
+                  onClick={() => setSelectedDonor(null)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <div className="text-sm font-semibold text-gray-600 mb-1">Name</div>
+                  <div className="text-lg font-medium text-foh-dark-brown">
+                    {selectedDonor.first_name} {selectedDonor.last_name}
+                  </div>
+                </div>
+
+                {selectedDonor.email && (
+                  <div>
+                    <div className="text-sm font-semibold text-gray-600 mb-1">Email</div>
+                    <div className="text-gray-700">{selectedDonor.email}</div>
+                  </div>
+                )}
+
+                {selectedDonor.organization && (
+                  <div>
+                    <div className="text-sm font-semibold text-gray-600 mb-1">Organization</div>
+                    <div className="text-gray-700">{selectedDonor.organization}</div>
+                  </div>
+                )}
+
+                {selectedDonor.referral_source && (
+                  <div>
+                    <div className="text-sm font-semibold text-gray-600 mb-1">Referral Source</div>
+                    <div className="text-gray-700">
+                      {selectedDonor.referral_source === 'Other' && selectedDonor.referral_custom
+                        ? selectedDonor.referral_custom
+                        : selectedDonor.referral_source}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

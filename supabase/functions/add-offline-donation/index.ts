@@ -35,12 +35,57 @@ Deno.serve(async (req: Request) => {
       );
     }
 
+    let donorId = null;
+
+    if (donor_name || donor_email) {
+      const nameParts = donor_name ? donor_name.trim().split(/\s+/) : ['', ''];
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+
+      if (donor_email) {
+        const { data: existingDonor } = await supabase
+          .from('donors')
+          .select('id')
+          .eq('email', donor_email)
+          .maybeSingle();
+
+        if (existingDonor) {
+          donorId = existingDonor.id;
+        } else {
+          const { data: newDonor, error: donorError } = await supabase
+            .from('donors')
+            .insert({
+              email: donor_email,
+              first_name: firstName,
+              last_name: lastName,
+            })
+            .select('id')
+            .single();
+
+          if (!donorError && newDonor) {
+            donorId = newDonor.id;
+          }
+        }
+      } else if (firstName) {
+        const { data: newDonor, error: donorError } = await supabase
+          .from('donors')
+          .insert({
+            first_name: firstName,
+            last_name: lastName,
+          })
+          .select('id')
+          .single();
+
+        if (!donorError && newDonor) {
+          donorId = newDonor.id;
+        }
+      }
+    }
+
     const metadata: any = {
       source: 'admin_offline',
       is_offline: true,
     };
-    if (donor_name) metadata.donor_name = donor_name;
-    if (donor_email) metadata.donor_email = donor_email;
     if (notes) metadata.notes = notes;
 
     const { data, error } = await supabase
@@ -51,6 +96,7 @@ Deno.serve(async (req: Request) => {
         donation_type: 'one_time',
         status: 'completed',
         completed_at: new Date().toISOString(),
+        donor_id: donorId,
         metadata: metadata,
       })
       .select()
