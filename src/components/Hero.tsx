@@ -108,8 +108,25 @@ export default function Hero() {
               <div className="text-4xl sm:text-5xl md:text-6xl font-light italic mb-2" style={{ fontFamily: 'Georgia, serif', color: '#2BB673' }}>
                 $150,000
               </div>
-              <div className="text-sm sm:text-base md:text-lg text-gray-800">
+              <div className="text-sm sm:text-base md:text-lg text-gray-800 mb-4">
                 By December 31, 2025
+              </div>
+
+              <div className="mt-2 pt-4 border-t-2 border-foh-light-green/20">
+                <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden mb-2">
+                  <div
+                    className="absolute inset-0 bg-gradient-to-r from-foh-light-green to-foh-mid-green transition-all duration-500"
+                    style={{ width: `${progressPercentage}%` }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
+                  </div>
+                </div>
+                <div className="flex justify-between items-center text-xs text-gray-600">
+                  <span className="font-semibold text-foh-mid-green">
+                    {isLoadingProgress ? '...' : `$${currentAmount.toLocaleString()}`}
+                  </span>
+                  <span>{progressPercentage.toFixed(0)}%</span>
+                </div>
               </div>
             </div>
 
@@ -145,31 +162,6 @@ export default function Hero() {
             >
               See How Hope Unfolds
             </button>
-          </div>
-
-          <div className="mt-8 mx-4 max-w-2xl mx-auto">
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl border-2 border-foh-light-green/30 shadow-lg p-6">
-              <div className="flex justify-between items-baseline mb-3">
-                <span className="text-base sm:text-lg font-semibold text-foh-dark-brown">Annual Fund Progress</span>
-                <span className="text-xl sm:text-2xl font-bold text-foh-light-green">
-                  {isLoadingProgress ? '...' : `$${currentAmount.toLocaleString()}`}
-                </span>
-              </div>
-
-              <div className="relative h-3 sm:h-4 bg-gray-200 rounded-full overflow-hidden mb-2">
-                <div
-                  className="absolute inset-0 bg-gradient-to-r from-foh-light-green to-foh-mid-green transition-all duration-500"
-                  style={{ width: `${progressPercentage}%` }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
-                </div>
-              </div>
-
-              <div className="flex justify-between text-sm text-gray-600">
-                <span>{progressPercentage.toFixed(1)}% of goal</span>
-                <span>Goal: ${goalAmount.toLocaleString()}</span>
-              </div>
-            </div>
           </div>
 
           <button
