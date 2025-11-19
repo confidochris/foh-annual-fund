@@ -23,7 +23,7 @@ export default function Story() {
         <div className="sm:hidden aspect-video rounded-xl overflow-hidden shadow-2xl mb-8">
           <iframe
             className="w-full h-full"
-            src="https://www.youtube-nocookie.com/embed/q6FW-l7Achw"
+            src="https://www.youtube-nocookie.com/embed/KQW3ObEdIKo"
             title="Marilyn's Story"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
@@ -35,7 +35,7 @@ export default function Story() {
             <div className="aspect-video rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl">
               <iframe
                 className="w-full h-full"
-                src="https://www.youtube-nocookie.com/embed/q6FW-l7Achw"
+                src="https://www.youtube-nocookie.com/embed/KQW3ObEdIKo"
                 title="Marilyn's Story"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
