@@ -35,7 +35,7 @@ export default function DonationForm() {
   ];
 
   const referralOptions = [
-    'Foundation of Hope mailer',
+    'I Received the Annual Fund Mailer',
     'Email from the Foundation of Hope',
     'Social Media',
     'Google or online search',
