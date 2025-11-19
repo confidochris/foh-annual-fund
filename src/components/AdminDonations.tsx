@@ -175,16 +175,44 @@ export default function AdminDonations() {
   const totalRaised = filteredDonations.filter(d => d.status === 'completed').reduce((sum, d) => sum + parseFloat(d.amount), 0);
 
   const exportToCSV = () => {
-    const headers = ['Date', 'Donor Name', 'Email', 'Amount', 'Type', 'Status', 'Notes'];
-    const rows = filteredDonations.map(d => [
-      new Date(d.created_at).toLocaleDateString(),
-      d.donors ? `${d.donors.first_name} ${d.donors.last_name}` : (d.metadata?.donor_name || 'Anonymous'),
-      d.donors?.email || d.metadata?.donor_email || '',
-      d.amount,
-      d.donation_type,
-      d.status,
-      d.metadata?.notes || ''
-    ]);
+    const headers = [
+      'Date',
+      'Time',
+      'First Name',
+      'Last Name',
+      'Email',
+      'Organization',
+      'Referral Source',
+      'Amount',
+      'Currency',
+      'Type',
+      'Status',
+      'Method',
+      'Notes'
+    ];
+
+    const rows = filteredDonations.map(d => {
+      const isOffline = d.metadata?.is_offline || false;
+      const referralSource = d.donors?.referral_source === 'Other' && d.donors?.referral_custom
+        ? d.donors.referral_custom
+        : (d.donors?.referral_source || '');
+
+      return [
+        new Date(d.created_at).toLocaleDateString(),
+        new Date(d.created_at).toLocaleTimeString(),
+        d.donors?.first_name || '',
+        d.donors?.last_name || '',
+        d.donors?.email || '',
+        d.donors?.organization || '',
+        referralSource,
+        d.amount,
+        'USD',
+        d.donation_type === 'recurring' ? 'Monthly' : 'One-Time',
+        d.status.charAt(0).toUpperCase() + d.status.slice(1),
+        isOffline ? 'Offline' : 'Stripe',
+        d.metadata?.notes || ''
+      ];
+    });
 
     const csvContent = [
       headers.join(','),
