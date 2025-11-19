@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
 import TopBanner from './components/TopBanner';
 import LogoBanner from './components/LogoBanner';
 import StickyNav from './components/StickyNav';
@@ -16,6 +17,18 @@ import ScrollToTop from './components/ScrollToTop';
 import AdminDonations from './components/AdminDonations';
 
 function HomePage() {
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      setTimeout(() => {
+        const element = document.querySelector(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
+  }, []);
+
   return (
     <>
       <TopBanner />
