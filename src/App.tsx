@@ -5,6 +5,7 @@ import LogoBanner from './components/LogoBanner';
 import StickyNav from './components/StickyNav';
 import ProgressIndicator from './components/ProgressIndicator';
 import Hero from './components/Hero';
+import AnnualFund from './components/AnnualFund';
 import Story from './components/Story';
 import About from './components/About';
 import Problem from './components/Problem';
@@ -36,6 +37,7 @@ function HomePage() {
       <StickyNav />
       <ProgressIndicator />
       <Hero />
+      <AnnualFund />
       <Story />
       <About />
       <Problem />
