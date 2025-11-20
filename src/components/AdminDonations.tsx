@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DollarSign, Plus, AlertCircle, CheckCircle, Download, Filter, Search, Calendar, CreditCard, User, RefreshCw } from 'lucide-react';
+import { DollarSign, Plus, AlertCircle, CheckCircle, Download, Search, Calendar, CreditCard, User, RefreshCw } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface Donation {

@@ -1,9 +1,6 @@
 import { ArrowRight, Heart, CheckCircle, Loader2, ChevronLeft } from 'lucide-react';
 import { useState, useEffect, FormEvent } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
 import { supabase } from '../lib/supabase';
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
 
 export default function DonationForm() {
   const [currentStep, setCurrentStep] = useState(1);
