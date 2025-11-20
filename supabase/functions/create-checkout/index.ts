@@ -14,6 +14,10 @@ interface CheckoutRequest {
   lastName: string;
   phone?: string;
   organization?: string;
+  streetAddress?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
   referralSource?: string;
   referralCustom?: string;
   amount: number;
@@ -39,7 +43,7 @@ Deno.serve(async (req: Request) => {
 
     const data: CheckoutRequest = await req.json();
 
-    const { email, firstName, lastName, phone, organization, referralSource, referralCustom, amount, donationType } = data;
+    const { email, firstName, lastName, phone, organization, streetAddress, city, state, zipCode, referralSource, referralCustom, amount, donationType } = data;
 
     if (!email || !amount || !donationType) {
       throw new Error('Missing required fields');
@@ -53,6 +57,10 @@ Deno.serve(async (req: Request) => {
         last_name: lastName,
         phone,
         organization,
+        street_address: streetAddress,
+        city,
+        state,
+        zip_code: zipCode,
         referral_source: referralSource,
         referral_custom: referralCustom,
         updated_at: new Date().toISOString(),

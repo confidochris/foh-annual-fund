@@ -23,6 +23,10 @@ export default function DonationForm() {
     lastName: '',
     phone: '',
     organization: '',
+    streetAddress: '',
+    city: '',
+    state: '',
+    zipCode: '',
     referralSource: '',
     referralCustom: '',
   });
@@ -42,6 +46,65 @@ export default function DonationForm() {
     'Friend or family member',
     'News or media coverage',
     'Other',
+  ];
+
+  const usStates = [
+    { code: 'AL', name: 'Alabama' },
+    { code: 'AK', name: 'Alaska' },
+    { code: 'AZ', name: 'Arizona' },
+    { code: 'AR', name: 'Arkansas' },
+    { code: 'CA', name: 'California' },
+    { code: 'CO', name: 'Colorado' },
+    { code: 'CT', name: 'Connecticut' },
+    { code: 'DE', name: 'Delaware' },
+    { code: 'FL', name: 'Florida' },
+    { code: 'GA', name: 'Georgia' },
+    { code: 'HI', name: 'Hawaii' },
+    { code: 'ID', name: 'Idaho' },
+    { code: 'IL', name: 'Illinois' },
+    { code: 'IN', name: 'Indiana' },
+    { code: 'IA', name: 'Iowa' },
+    { code: 'KS', name: 'Kansas' },
+    { code: 'KY', name: 'Kentucky' },
+    { code: 'LA', name: 'Louisiana' },
+    { code: 'ME', name: 'Maine' },
+    { code: 'MD', name: 'Maryland' },
+    { code: 'MA', name: 'Massachusetts' },
+    { code: 'MI', name: 'Michigan' },
+    { code: 'MN', name: 'Minnesota' },
+    { code: 'MS', name: 'Mississippi' },
+    { code: 'MO', name: 'Missouri' },
+    { code: 'MT', name: 'Montana' },
+    { code: 'NE', name: 'Nebraska' },
+    { code: 'NV', name: 'Nevada' },
+    { code: 'NH', name: 'New Hampshire' },
+    { code: 'NJ', name: 'New Jersey' },
+    { code: 'NM', name: 'New Mexico' },
+    { code: 'NY', name: 'New York' },
+    { code: 'NC', name: 'North Carolina' },
+    { code: 'ND', name: 'North Dakota' },
+    { code: 'OH', name: 'Ohio' },
+    { code: 'OK', name: 'Oklahoma' },
+    { code: 'OR', name: 'Oregon' },
+    { code: 'PA', name: 'Pennsylvania' },
+    { code: 'RI', name: 'Rhode Island' },
+    { code: 'SC', name: 'South Carolina' },
+    { code: 'SD', name: 'South Dakota' },
+    { code: 'TN', name: 'Tennessee' },
+    { code: 'TX', name: 'Texas' },
+    { code: 'UT', name: 'Utah' },
+    { code: 'VT', name: 'Vermont' },
+    { code: 'VA', name: 'Virginia' },
+    { code: 'WA', name: 'Washington' },
+    { code: 'WV', name: 'West Virginia' },
+    { code: 'WI', name: 'Wisconsin' },
+    { code: 'WY', name: 'Wyoming' },
+    { code: 'DC', name: 'District of Columbia' },
+    { code: 'AS', name: 'American Samoa' },
+    { code: 'GU', name: 'Guam' },
+    { code: 'MP', name: 'Northern Mariana Islands' },
+    { code: 'PR', name: 'Puerto Rico' },
+    { code: 'VI', name: 'U.S. Virgin Islands' },
   ];
 
   const progressPercentage = (currentAmount / goalAmount) * 100;
@@ -196,6 +259,10 @@ export default function DonationForm() {
             lastName: formData.lastName,
             phone: formData.phone,
             organization: formData.organization,
+            streetAddress: formData.streetAddress,
+            city: formData.city,
+            state: formData.state,
+            zipCode: formData.zipCode,
             referralSource: formData.referralSource,
             referralCustom: formData.referralCustom,
             amount,
@@ -458,6 +525,21 @@ export default function DonationForm() {
                 </div>
 
                 <div>
+                  <label htmlFor="organization" className="block text-sm font-medium text-gray-700 mb-2">
+                    Organization Name
+                  </label>
+                  <input
+                    type="text"
+                    id="organization"
+                    name="organization"
+                    value={formData.organization}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-foh-light-green focus:outline-none focus:ring-4 focus:ring-foh-light-green/20 transition-all"
+                    placeholder="Your company or organization"
+                  />
+                </div>
+
+                <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                     Email Address <span className="text-red-500">*</span>
                   </label>
@@ -489,17 +571,70 @@ export default function DonationForm() {
                 </div>
 
                 <div>
-                  <label htmlFor="organization" className="block text-sm font-medium text-gray-700 mb-2">
-                    Organization Name
+                  <label htmlFor="streetAddress" className="block text-sm font-medium text-gray-700 mb-2">
+                    Street Address
                   </label>
                   <input
                     type="text"
-                    id="organization"
-                    name="organization"
-                    value={formData.organization}
+                    id="streetAddress"
+                    name="streetAddress"
+                    value={formData.streetAddress}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-foh-light-green focus:outline-none focus:ring-4 focus:ring-foh-light-green/20 transition-all"
-                    placeholder="Your company or organization"
+                    placeholder="123 Main Street"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
+                      City
+                    </label>
+                    <input
+                      type="text"
+                      id="city"
+                      name="city"
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-foh-light-green focus:outline-none focus:ring-4 focus:ring-foh-light-green/20 transition-all"
+                      placeholder="City"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-2">
+                      State
+                    </label>
+                    <select
+                      id="state"
+                      name="state"
+                      value={formData.state}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-foh-light-green focus:outline-none focus:ring-4 focus:ring-foh-light-green/20 transition-all bg-white"
+                    >
+                      <option value="">Select state</option>
+                      {usStates.map((state) => (
+                        <option key={state.code} value={state.code}>
+                          {state.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700 mb-2">
+                    Zip Code
+                  </label>
+                  <input
+                    type="text"
+                    id="zipCode"
+                    name="zipCode"
+                    value={formData.zipCode}
+                    onChange={handleInputChange}
+                    maxLength={10}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-foh-light-green focus:outline-none focus:ring-4 focus:ring-foh-light-green/20 transition-all"
+                    placeholder="12345"
                   />
                 </div>
               </div>
