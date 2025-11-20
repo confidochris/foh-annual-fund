@@ -60,6 +60,10 @@ export default function Hero() {
     document.getElementById('annual-fund')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const scrollToStory = () => {
+    document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   const scrollToDonate = () => {
     document.getElementById('donate')?.scrollIntoView({ behavior: 'smooth' });
   };
