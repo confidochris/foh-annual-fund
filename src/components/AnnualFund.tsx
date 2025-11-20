@@ -11,9 +11,12 @@ export default function AnnualFund() {
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-8">
-          <p className="text-lg text-gray-700 leading-relaxed">
-            At the Foundation of Hope, <span className="font-bold text-foh-mid-green">100% of every dollar</span> given to the Annual Fund goes directly to research — the studies, ideas, and discoveries that lead to real solutions across the full spectrum of mental illnesses. This is possible thanks to our incredible community of year-round supporters, which allows the Annual Fund to stay fully focused on progress and innovation.
+        <div className="bg-gradient-to-br from-foh-lime/20 via-white to-foh-mid-green/10 rounded-2xl shadow-lg p-8 md:p-12 mb-8 border border-foh-lime/30">
+          <p className="text-lg text-gray-800 leading-relaxed mb-6">
+            At the Foundation of Hope, <span className="font-bold text-foh-mid-green">100% of every dollar</span> given to the Annual Fund goes directly to research — the studies, ideas, and discoveries driving real solutions across the full spectrum of mental illnesses.
+          </p>
+          <p className="text-lg text-gray-800 leading-relaxed">
+            Thanks to our incredible year-round supporters, this campaign stays laser-focused on progress and innovation when it's needed most.
           </p>
         </div>
 
