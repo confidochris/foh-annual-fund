@@ -14,10 +14,10 @@ interface CheckoutRequest {
   lastName: string;
   phone?: string;
   organization?: string;
-  streetAddress?: string;
-  city?: string;
-  state?: string;
-  zipCode?: string;
+  streetAddress: string;
+  city: string;
+  state: string;
+  zipCode: string;
   referralSource?: string;
   referralCustom?: string;
   amount: number;
@@ -45,7 +45,7 @@ Deno.serve(async (req: Request) => {
 
     const { email, firstName, lastName, phone, organization, streetAddress, city, state, zipCode, referralSource, referralCustom, amount, donationType } = data;
 
-    if (!email || !amount || !donationType) {
+    if (!email || !amount || !donationType || !firstName || !lastName || !streetAddress || !city || !state || !zipCode) {
       throw new Error('Missing required fields');
     }
 

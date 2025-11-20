@@ -206,7 +206,7 @@ export default function DonationForm() {
   };
 
   const validateStep2 = () => {
-    if (!formData.email || !formData.firstName || !formData.lastName) {
+    if (!formData.email || !formData.firstName || !formData.lastName || !formData.streetAddress || !formData.city || !formData.state || !formData.zipCode) {
       setError('Please fill in all required fields');
       return false;
     }
@@ -572,7 +572,7 @@ export default function DonationForm() {
 
                 <div>
                   <label htmlFor="streetAddress" className="block text-sm font-medium text-gray-700 mb-2">
-                    Street Address
+                    Street Address <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -580,6 +580,7 @@ export default function DonationForm() {
                     name="streetAddress"
                     value={formData.streetAddress}
                     onChange={handleInputChange}
+                    required
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-foh-light-green focus:outline-none focus:ring-4 focus:ring-foh-light-green/20 transition-all"
                     placeholder="123 Main Street"
                   />
@@ -588,7 +589,7 @@ export default function DonationForm() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
-                      City
+                      City <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -596,6 +597,7 @@ export default function DonationForm() {
                       name="city"
                       value={formData.city}
                       onChange={handleInputChange}
+                      required
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-foh-light-green focus:outline-none focus:ring-4 focus:ring-foh-light-green/20 transition-all"
                       placeholder="City"
                     />
@@ -603,13 +605,14 @@ export default function DonationForm() {
 
                   <div>
                     <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-2">
-                      State
+                      State <span className="text-red-500">*</span>
                     </label>
                     <select
                       id="state"
                       name="state"
                       value={formData.state}
                       onChange={handleInputChange}
+                      required
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-foh-light-green focus:outline-none focus:ring-4 focus:ring-foh-light-green/20 transition-all bg-white"
                     >
                       <option value="">Select state</option>
@@ -624,7 +627,7 @@ export default function DonationForm() {
 
                 <div>
                   <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700 mb-2">
-                    Zip Code
+                    Zip Code <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -632,6 +635,7 @@ export default function DonationForm() {
                     name="zipCode"
                     value={formData.zipCode}
                     onChange={handleInputChange}
+                    required
                     maxLength={10}
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-foh-light-green focus:outline-none focus:ring-4 focus:ring-foh-light-green/20 transition-all"
                     placeholder="12345"
