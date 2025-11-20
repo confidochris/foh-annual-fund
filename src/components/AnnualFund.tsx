@@ -22,7 +22,7 @@ export default function AnnualFund() {
           </p>
         </div>
 
-        <div className="text-center">
+        <div className="text-center hidden md:block">
           <div className="inline-block bg-foh-mid-green text-white px-8 py-6 rounded-xl">
             <p className="text-2xl md:text-3xl font-bold">100% to research. 100% to hope.</p>
           </div>
