@@ -218,13 +218,14 @@ export default function AdminDonations() {
       const referralSource = d.donors?.referral_source === 'Other' && d.donors?.referral_custom
         ? d.donors.referral_custom
         : (d.donors?.referral_source || '');
+      const donorEmail = d.donors?.email && !d.donors.email.includes('@placeholder.local') ? d.donors.email : '';
 
       return [
         new Date(d.created_at).toLocaleDateString(),
         new Date(d.created_at).toLocaleTimeString(),
         d.donors?.first_name || '',
         d.donors?.last_name || '',
-        d.donors?.email || '',
+        donorEmail,
         d.donors?.organization || '',
         referralSource,
         d.amount,
@@ -464,7 +465,7 @@ export default function AdminDonations() {
                               ) : (
                                 <div className="font-medium text-foh-dark-brown">{donorName}</div>
                               )}
-                              {donorEmail && (
+                              {donorEmail && !donorEmail.includes('@placeholder.local') && (
                                 <div className="text-xs text-gray-500">{donorEmail}</div>
                               )}
                               {notes && (
@@ -661,7 +662,7 @@ export default function AdminDonations() {
                   </div>
                 </div>
 
-                {selectedDonor.email && (
+                {selectedDonor.email && !selectedDonor.email.includes('@placeholder.local') && (
                   <div>
                     <div className="text-sm font-semibold text-gray-600 mb-1">Email</div>
                     <div className="text-gray-700">{selectedDonor.email}</div>

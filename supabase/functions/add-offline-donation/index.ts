@@ -66,9 +66,11 @@ Deno.serve(async (req: Request) => {
           }
         }
       } else if (firstName) {
+        const placeholderEmail = `offline_${Date.now()}_${Math.random().toString(36).substring(7)}@placeholder.local`;
         const { data: newDonor, error: donorError } = await supabase
           .from('donors')
           .insert({
+            email: placeholderEmail,
             first_name: firstName,
             last_name: lastName,
           })
