@@ -56,8 +56,8 @@ export default function Hero() {
     }
   };
 
-  const scrollToStory = () => {
-    document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToAnnualFund = () => {
+    document.getElementById('annual-fund')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const scrollToDonate = () => {
@@ -165,9 +165,9 @@ export default function Hero() {
           </div>
 
           <button
-            onClick={scrollToStory}
+            onClick={scrollToAnnualFund}
             className="mt-8 flex justify-center mx-auto hover:opacity-100 transition-opacity cursor-pointer"
-            aria-label="Scroll to story section"
+            aria-label="Scroll to annual fund section"
           >
             <svg
               className="w-8 h-8 text-foh-light-green opacity-60"

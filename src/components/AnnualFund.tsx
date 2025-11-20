@@ -1,6 +1,8 @@
+import NextSection from './NextSection';
+
 export default function AnnualFund() {
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-foh-lime/5">
+    <section id="annual-fund" className="py-20 bg-gradient-to-b from-white to-foh-lime/5">
       <div className="max-w-4xl mx-auto px-6">
         <div className="text-center mb-8">
           <h2 className="text-4xl md:text-5xl font-bold text-foh-dark-brown mb-6">
@@ -25,6 +27,8 @@ export default function AnnualFund() {
             <p className="text-2xl md:text-3xl font-bold">100% to research. 100% to hope.</p>
           </div>
         </div>
+
+        <NextSection targetId="story" label="The Story" />
       </div>
     </section>
   );
