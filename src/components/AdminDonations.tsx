@@ -17,6 +17,10 @@ interface Donation {
     organization: string | null;
     referral_source: string | null;
     referral_custom: string | null;
+    street_address: string | null;
+    city: string | null;
+    state: string | null;
+    zip_code: string | null;
   };
 }
 
@@ -27,6 +31,10 @@ interface DonorDetails {
   organization: string | null;
   referral_source: string | null;
   referral_custom: string | null;
+  street_address: string | null;
+  city: string | null;
+  state: string | null;
+  zip_code: string | null;
   amount: string;
   created_at: string;
 }
@@ -86,7 +94,11 @@ export default function AdminDonations() {
             email,
             organization,
             referral_source,
-            referral_custom
+            referral_custom,
+            street_address,
+            city,
+            state,
+            zip_code
           )
         `)
         .order('created_at', { ascending: false });
@@ -205,6 +217,10 @@ export default function AdminDonations() {
       'Email',
       'Organization',
       'Referral Source',
+      'Street Address',
+      'City',
+      'State',
+      'Zip Code',
       'Amount',
       'Currency',
       'Type',
@@ -228,6 +244,10 @@ export default function AdminDonations() {
         donorEmail,
         d.donors?.organization || '',
         referralSource,
+        d.donors?.street_address || '',
+        d.donors?.city || '',
+        d.donors?.state || '',
+        d.donors?.zip_code || '',
         d.amount,
         'USD',
         d.donation_type === 'recurring' ? 'Monthly' : 'One-Time',
@@ -693,6 +713,21 @@ export default function AdminDonations() {
                       {selectedDonor.referral_source === 'Other' && selectedDonor.referral_custom
                         ? selectedDonor.referral_custom
                         : selectedDonor.referral_source}
+                    </div>
+                  </div>
+                )}
+
+                {(selectedDonor.street_address || selectedDonor.city || selectedDonor.state || selectedDonor.zip_code) && (
+                  <div>
+                    <div className="text-sm font-semibold text-gray-600 mb-1">Address</div>
+                    <div className="text-gray-700">
+                      {selectedDonor.street_address && <div>{selectedDonor.street_address}</div>}
+                      {(selectedDonor.city || selectedDonor.state || selectedDonor.zip_code) && (
+                        <div>
+                          {selectedDonor.city}{selectedDonor.city && (selectedDonor.state || selectedDonor.zip_code) && ', '}
+                          {selectedDonor.state} {selectedDonor.zip_code}
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
