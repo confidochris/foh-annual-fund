@@ -63,7 +63,7 @@ Deno.serve(async (req: Request) => {
 
         const { data: donation, error: fetchError } = await supabase
           .from('donations')
-          .select('*, donors(first_name, last_name, email)')
+          .select('*, donors(first_name, last_name, email, address, city, state, postal_code, phone)')
           .eq('id', donationId)
           .single();
 
@@ -179,6 +179,53 @@ Deno.serve(async (req: Request) => {
                 source: 'stripe-webhook',
               });
           }
+        }
+
+        try {
+          console.log('Syncing donation to eTapestry...');
+          const etapestryResponse = await fetch(
+            `${supabaseUrl}/functions/v1/sync-etapestry`,
+            {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${supabaseKey}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                firstName: donation.donors.first_name,
+                lastName: donation.donors.last_name,
+                email: donation.donors.email,
+                amount: donation.amount,
+                address: donation.donors.address,
+                city: donation.donors.city,
+                state: donation.donors.state,
+                postalCode: donation.donors.postal_code,
+                phone: donation.donors.phone,
+              }),
+            }
+          );
+
+          const etapestryResult = await etapestryResponse.json();
+          console.log('eTapestry sync result:', etapestryResult);
+
+          await supabase
+            .from('donation_events')
+            .insert({
+              donation_id: donationId,
+              event_type: etapestryResult.success ? 'etapestry_synced' : 'etapestry_failed',
+              event_data: etapestryResult,
+              source: 'stripe-webhook',
+            });
+        } catch (etapestryError) {
+          console.error('eTapestry sync error:', etapestryError);
+          await supabase
+            .from('donation_events')
+            .insert({
+              donation_id: donationId,
+              event_type: 'etapestry_failed',
+              event_data: { error: etapestryError.message || String(etapestryError) },
+              source: 'stripe-webhook',
+            });
         }
 
         break;
