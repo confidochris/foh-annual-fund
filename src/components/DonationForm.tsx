@@ -784,17 +784,17 @@ export default function DonationForm() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 text-center">
-          <div className="p-5 sm:p-6 bg-gradient-to-br from-foh-light-green/10 to-foh-blue/10 rounded-lg sm:rounded-xl">
-            <div className="text-3xl sm:text-4xl font-bold text-foh-light-green mb-2">41</div>
-            <div className="text-sm sm:text-base text-gray-700 font-medium">Years Supporting Mental Illness Research</div>
+          <div className="p-5 sm:p-6 bg-gradient-to-br from-foh-lime/10 to-foh-light-green/10 rounded-lg sm:rounded-xl">
+            <div className="text-3xl sm:text-4xl font-bold text-foh-mid-green mb-2">100%</div>
+            <div className="text-sm sm:text-base text-gray-700 font-medium">Local Impact</div>
           </div>
           <div className="p-5 sm:p-6 bg-gradient-to-br from-foh-blue/10 to-foh-lime/10 rounded-lg sm:rounded-xl">
             <div className="text-3xl sm:text-4xl font-bold text-foh-blue mb-2">210</div>
             <div className="text-sm sm:text-base text-gray-700 font-medium">Research Grants Funded</div>
           </div>
-          <div className="p-5 sm:p-6 bg-gradient-to-br from-foh-lime/10 to-foh-light-green/10 rounded-lg sm:rounded-xl">
-            <div className="text-3xl sm:text-4xl font-bold text-foh-mid-green mb-2">100%</div>
-            <div className="text-sm sm:text-base text-gray-700 font-medium">Local Impact</div>
+          <div className="p-5 sm:p-6 bg-gradient-to-br from-foh-light-green/10 to-foh-blue/10 rounded-lg sm:rounded-xl">
+            <div className="text-3xl sm:text-4xl font-bold text-foh-light-green mb-2">41</div>
+            <div className="text-sm sm:text-base text-gray-700 font-medium">Years Supporting Mental Illness Research</div>
           </div>
         </div>
       </div>
