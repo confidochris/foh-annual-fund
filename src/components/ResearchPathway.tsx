@@ -115,8 +115,8 @@ export default function ResearchPathway() {
             </a>
           </div>
         ) : currentStep && (
-          <div className="flex flex-col">
-            <div className="mb-6">
+          <div className="flex flex-col md:flex-row gap-8">
+            <div className="md:w-1/2 flex flex-col justify-start text-left">
               <div className="flex items-center gap-3 mb-3">
                 <div className={`w-10 h-10 rounded-full ${badgeBg} flex items-center justify-center ${textColor} font-bold text-lg`}>
                   {currentIndex + 1}
@@ -125,26 +125,21 @@ export default function ResearchPathway() {
                   {currentStep.title}
                 </h3>
               </div>
-              <p className={`text-lg ${secondaryTextColor} italic font-medium`}>
+              <p className={`text-lg ${secondaryTextColor} italic font-medium mb-6`}>
                 {currentStep.description}
+              </p>
+              <p className={`text-base ${secondaryTextColor} leading-relaxed`}>
+                {currentStep.details}
               </p>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-6">
-              <div className="md:w-1/3 flex-shrink-0">
-                <div className="w-full h-80 flex items-center justify-center">
-                  <img
-                    src={currentStep.imageUrl}
-                    alt={currentStep.title}
-                    className="max-w-full max-h-full object-contain rounded-lg"
-                  />
-                </div>
-              </div>
-
-              <div className="md:w-2/3 flex flex-col">
-                <p className={`text-base ${secondaryTextColor} leading-relaxed`}>
-                  {currentStep.details}
-                </p>
+            <div className="md:w-1/2 flex-shrink-0">
+              <div className="w-full h-[40rem] flex items-center justify-center">
+                <img
+                  src={currentStep.imageUrl}
+                  alt={currentStep.title}
+                  className="max-w-full max-h-full object-contain rounded-lg"
+                />
               </div>
             </div>
           </div>
