@@ -90,27 +90,27 @@ export default function ResearchPathway() {
 
   return (
     <div className="relative max-w-3xl mx-auto">
-      <div className="relative flex items-center gap-4">
+      <div className="relative md:flex md:items-center md:gap-4">
         <button
           onClick={goToPrevious}
-          className="flex-shrink-0 w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110"
+          className="hidden md:flex flex-shrink-0 w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl items-center justify-center transition-all duration-300 hover:scale-110"
           aria-label="Previous step"
         >
           <ChevronLeft className="w-6 h-6 text-gray-700" />
         </button>
 
-        <div className="flex-1">
+        <div className="relative flex-1">
           {isLastCard ? (
-            <div className="bg-gradient-to-br from-green-600 to-teal-600 rounded-2xl shadow-xl p-8 md:p-12 flex flex-col items-center justify-center text-white text-center min-h-[400px]">
-              <h3 className="text-3xl md:text-4xl font-bold mb-6">
+            <div className="bg-gradient-to-br from-green-600 to-teal-600 rounded-2xl shadow-xl p-8 md:p-12 flex flex-col items-center justify-center text-white text-center min-h-[300px] md:min-h-[400px]">
+              <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6">
                 Support Life-Changing Research
               </h3>
-              <p className="text-lg mb-8 opacity-90 max-w-2xl">
+              <p className="text-base md:text-lg mb-6 md:mb-8 opacity-90 max-w-2xl">
                 Every donation to the Foundation of Hope fuels the research pathway that leads to breakthrough discoveries in mental illness treatment.
               </p>
               <a
                 href="#donate"
-                className="inline-block px-8 py-4 bg-white text-green-700 font-semibold rounded-xl hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
+                className="inline-block px-6 py-3 md:px-8 md:py-4 bg-white text-green-700 font-semibold rounded-xl hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
               >
                 Make Your Impact Today
               </a>
@@ -118,9 +118,9 @@ export default function ResearchPathway() {
           ) : currentStep && (
             <button
               onClick={() => setSelectedStep(currentStep)}
-              className="w-full bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 cursor-pointer"
+              className="w-full bg-white rounded-2xl shadow-xl p-4 md:p-8 hover:shadow-2xl transition-all duration-300 cursor-pointer"
             >
-              <div className="w-full h-[400px] flex items-center justify-center">
+              <div className="w-full h-[400px] md:h-[400px] flex items-center justify-center">
                 <img
                   src={currentStep.imageUrl}
                   alt={currentStep.title}
@@ -129,11 +129,27 @@ export default function ResearchPathway() {
               </div>
             </button>
           )}
+
+          <button
+            onClick={goToPrevious}
+            className="md:hidden absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110 z-10"
+            aria-label="Previous step"
+          >
+            <ChevronLeft className="w-5 h-5 text-gray-700" />
+          </button>
+
+          <button
+            onClick={goToNext}
+            className="md:hidden absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110 z-10"
+            aria-label="Next step"
+          >
+            <ChevronRight className="w-5 h-5 text-gray-700" />
+          </button>
         </div>
 
         <button
           onClick={goToNext}
-          className="flex-shrink-0 w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110"
+          className="hidden md:flex flex-shrink-0 w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl items-center justify-center transition-all duration-300 hover:scale-110"
           aria-label="Next step"
         >
           <ChevronRight className="w-6 h-6 text-gray-700" />
