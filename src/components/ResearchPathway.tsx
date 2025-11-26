@@ -129,21 +129,23 @@ export default function ResearchPathway() {
               </div>
             </button>
           )}
+        </div>
 
+        <div className="md:hidden flex justify-center gap-4 mt-4">
           <button
             onClick={goToPrevious}
-            className="md:hidden absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110 z-10"
+            className="w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110"
             aria-label="Previous step"
           >
-            <ChevronLeft className="w-5 h-5 text-gray-700" />
+            <ChevronLeft className="w-6 h-6 text-gray-700" />
           </button>
 
           <button
             onClick={goToNext}
-            className="md:hidden absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110 z-10"
+            className="w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110"
             aria-label="Next step"
           >
-            <ChevronRight className="w-5 h-5 text-gray-700" />
+            <ChevronRight className="w-6 h-6 text-gray-700" />
           </button>
         </div>
 
