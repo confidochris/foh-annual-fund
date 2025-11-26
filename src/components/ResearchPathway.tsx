@@ -115,36 +115,37 @@ export default function ResearchPathway() {
             </a>
           </div>
         ) : currentStep && (
-          <>
-            <div className="mb-6">
-              <div className="mb-6 flex justify-center">
-                <img
-                  src={currentStep.imageUrl}
-                  alt={currentStep.title}
-                  className="max-w-sm h-auto rounded-lg shadow-md"
-                />
-              </div>
+          <div className="flex flex-col md:flex-row gap-6 items-stretch">
+            <div className="md:w-1/3 flex-shrink-0">
+              <img
+                src={currentStep.imageUrl}
+                alt={currentStep.title}
+                className="w-full h-full object-cover rounded-lg shadow-md"
+              />
+            </div>
+
+            <div className="md:w-2/3 flex flex-col">
               <div className="mb-4">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 mb-3">
                   <div className={`w-10 h-10 rounded-full ${badgeBg} flex items-center justify-center ${textColor} font-bold text-lg`}>
                     {currentIndex + 1}
                   </div>
-                  <h3 className={`text-3xl md:text-4xl font-bold ${textColor}`}>
+                  <h3 className={`text-2xl md:text-3xl font-bold ${textColor}`}>
                     {currentStep.title}
                   </h3>
                 </div>
+                <p className={`text-lg ${secondaryTextColor} italic font-medium`}>
+                  {currentStep.description}
+                </p>
               </div>
-              <p className={`text-xl ${secondaryTextColor} italic font-medium`}>
-                {currentStep.description}
-              </p>
-            </div>
 
-            <div className="flex-1">
-              <p className={`text-lg ${secondaryTextColor} leading-relaxed`}>
-                {currentStep.details}
-              </p>
+              <div className="flex-1">
+                <p className={`text-base ${secondaryTextColor} leading-relaxed`}>
+                  {currentStep.details}
+                </p>
+              </div>
             </div>
-          </>
+          </div>
         )}
 
         <div className={`flex items-center mt-8 pt-6 border-t ${isLastCard || isLightBackground(currentIndex) ? 'border-gray-200' : 'border-white/20'} ${isLastCard ? 'justify-between' : 'justify-between'}`}>
