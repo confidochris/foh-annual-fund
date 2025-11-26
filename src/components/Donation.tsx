@@ -118,7 +118,7 @@ export default function Donation() {
             </div>
 
             <div className="flex justify-between items-center text-xs sm:text-sm">
-              <span className="text-gray-600">{isLoading ? '...' : `${progressPercentage.toFixed(1)}% of goal`}</span>
+              <span className="text-gray-600">{isLoading ? '...' : `${progressPercentage.toFixed(0)}% of goal`}</span>
               <span className="text-gray-600">{isLoading ? '...' : `Goal: $${progress.goal_amount.toLocaleString()}`}</span>
             </div>
           </div>

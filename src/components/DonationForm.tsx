@@ -350,7 +350,7 @@ export default function DonationForm() {
                 </div>
 
                 <div className="flex justify-between items-center text-xs sm:text-sm">
-                  <span className="text-gray-600">{progressPercentage.toFixed(1)}% of goal</span>
+                  <span className="text-gray-600">{progressPercentage.toFixed(0)}% of goal</span>
                   <span className="text-gray-600">Goal: ${goalAmount.toLocaleString()}</span>
                 </div>
               </div>
