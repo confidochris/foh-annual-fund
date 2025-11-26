@@ -140,7 +140,13 @@ export default function ResearchPathway() {
         </button>
       </div>
 
-      <div className="flex justify-center gap-2 mt-6">
+      {!isLastCard && (
+        <p className="text-center text-gray-600 text-sm mt-4 mb-2">
+          Click the image to learn more
+        </p>
+      )}
+
+      <div className="flex justify-center gap-2 mt-2">
         {Array.from({ length: totalCards }).map((_, index) => (
           <button
             key={index}
