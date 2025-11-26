@@ -120,7 +120,7 @@ export default function ResearchPathway() {
               onClick={() => setSelectedStep(currentStep)}
               className="w-full bg-white rounded-2xl shadow-xl p-4 md:p-8 hover:shadow-2xl transition-all duration-300 cursor-pointer"
             >
-              <div className="w-full h-[400px] md:h-[400px] flex items-center justify-center">
+              <div className="w-full h-[280px] md:h-[400px] flex items-center justify-center">
                 <img
                   src={currentStep.imageUrl}
                   alt={currentStep.title}
