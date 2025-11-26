@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 interface PathwayStep {
   id: string;
@@ -69,58 +69,91 @@ const pathwaySteps: PathwayStep[] = [
 ];
 
 export default function ResearchPathway() {
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedStep, setSelectedStep] = useState<PathwayStep | null>(null);
+  const totalCards = pathwaySteps.length + 1;
+
+  const goToNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % totalCards);
+  };
+
+  const goToPrevious = () => {
+    setCurrentIndex((prev) => (prev - 1 + totalCards) % totalCards);
+  };
+
+  const isLastCard = currentIndex === pathwaySteps.length;
+  const currentStep = isLastCard ? null : pathwaySteps[currentIndex];
 
   const isLightBackground = (index: number): boolean => {
     return index % 2 === 0;
   };
 
   return (
-    <div className="relative max-w-7xl mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {pathwaySteps.map((step, index) => (
-          <button
-            key={step.id}
-            onClick={() => setSelectedStep(step)}
-            className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer group"
-          >
-            <div className="flex flex-col items-center">
-              <div className="w-full h-64 flex items-center justify-center mb-4">
+    <div className="relative max-w-3xl mx-auto">
+      <div className="relative flex items-center gap-4">
+        <button
+          onClick={goToPrevious}
+          className="flex-shrink-0 w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110"
+          aria-label="Previous step"
+        >
+          <ChevronLeft className="w-6 h-6 text-gray-700" />
+        </button>
+
+        <div className="flex-1">
+          {isLastCard ? (
+            <div className="bg-gradient-to-br from-green-600 to-teal-600 rounded-2xl shadow-xl p-8 md:p-12 flex flex-col items-center justify-center text-white text-center min-h-[400px]">
+              <h3 className="text-3xl md:text-4xl font-bold mb-6">
+                Support Life-Changing Research
+              </h3>
+              <p className="text-lg mb-8 opacity-90 max-w-2xl">
+                Every donation to the Foundation of Hope fuels the research pathway that leads to breakthrough discoveries in mental illness treatment.
+              </p>
+              <a
+                href="#donate"
+                className="inline-block px-8 py-4 bg-white text-green-700 font-semibold rounded-xl hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
+              >
+                Make Your Impact Today
+              </a>
+            </div>
+          ) : currentStep && (
+            <button
+              onClick={() => setSelectedStep(currentStep)}
+              className="w-full bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 cursor-pointer"
+            >
+              <div className="w-full h-[400px] flex items-center justify-center">
                 <img
-                  src={step.imageUrl}
-                  alt={step.title}
+                  src={currentStep.imageUrl}
+                  alt={currentStep.title}
                   className="max-w-full max-h-full object-contain"
                 />
               </div>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-8 h-8 rounded-full bg-gray-900/10 flex items-center justify-center text-gray-900 font-bold text-sm">
-                  {index + 1}
-                </div>
-                <h3 className="text-xl font-bold text-gray-900">
-                  {step.title}
-                </h3>
-              </div>
-              <p className="text-sm text-gray-600 text-center italic">
-                {step.description}
-              </p>
-            </div>
-          </button>
-        ))}
-
-        <div className="bg-gradient-to-br from-green-600 to-teal-600 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex flex-col items-center justify-center text-white text-center">
-          <h3 className="text-2xl font-bold mb-4">
-            Support Life-Changing Research
-          </h3>
-          <p className="text-sm mb-6 opacity-90">
-            Every donation fuels the research pathway that leads to breakthrough discoveries.
-          </p>
-          <a
-            href="#donate"
-            className="inline-block px-6 py-3 bg-white text-green-700 font-semibold rounded-xl hover:bg-gray-100 transition-all duration-300"
-          >
-            Make Your Impact Today
-          </a>
+            </button>
+          )}
         </div>
+
+        <button
+          onClick={goToNext}
+          className="flex-shrink-0 w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110"
+          aria-label="Next step"
+        >
+          <ChevronRight className="w-6 h-6 text-gray-700" />
+        </button>
+      </div>
+
+      <div className="flex justify-center gap-2 mt-6">
+        {Array.from({ length: totalCards }).map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            className="rounded-full transition-all duration-300"
+            style={{
+              backgroundColor: index === currentIndex ? '#2BB673' : '#D1D5DB',
+              width: index === currentIndex ? '2rem' : '0.5rem',
+              height: '0.5rem'
+            }}
+            aria-label={`Go to ${index === pathwaySteps.length ? 'donation' : `step ${index + 1}`}`}
+          />
+        ))}
       </div>
 
       {selectedStep && (
