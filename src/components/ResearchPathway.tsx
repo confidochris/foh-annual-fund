@@ -8,6 +8,7 @@ interface PathwayStep {
   hoverColor: string;
   description: string;
   details: string;
+  imageUrl: string;
 }
 
 const pathwaySteps: PathwayStep[] = [
@@ -17,7 +18,8 @@ const pathwaySteps: PathwayStep[] = [
     color: '#B8E6F0',
     hoverColor: '#B8E6F0',
     description: 'Researchers propose bold new studies',
-    details: 'The research pathway begins with innovative ideas from talented researchers who apply for Foundation of Hope seed grants to explore new ways of understanding and treating mental illness. These bold proposals reflect fresh thinking and novel approaches that have the potential to transform mental illness care. Through this competitive grant process, the Foundation of Hope provides critical early funding that helps visionary scientists and researchers turn promising ideas into actionable research.'
+    details: 'The research pathway begins with innovative ideas from talented researchers who apply for Foundation of Hope seed grants to explore new ways of understanding and treating mental illness. These bold proposals reflect fresh thinking and novel approaches that have the potential to transform mental illness care. Through this competitive grant process, the Foundation of Hope provides critical early funding that helps visionary scientists and researchers turn promising ideas into actionable research.',
+    imageUrl: 'https://i.ibb.co/k2JVCVNg/Your-gift-is-hope-in-action.png'
   },
   {
     id: 'scientific-review',
@@ -25,7 +27,8 @@ const pathwaySteps: PathwayStep[] = [
     color: '#2BB673',
     hoverColor: '#2BB673',
     description: 'Projects are rigorously vetted by experts',
-    details: 'Every proposal submitted to the Foundation of Hope undergoes rigorous evaluation by our esteemed Scientific Advisory Committee, a panel of leading experts in psychiatry, neuroscience, and mental illness. Each grant application is carefully reviewed for scientific merit, methodological soundness, and potential for impact. Only the most promising studies receive approval and funding, ensuring that every donor dollar supports research with the greatest potential to advance our understanding and treatment of mental illness.'
+    details: 'Every proposal submitted to the Foundation of Hope undergoes rigorous evaluation by our esteemed Scientific Advisory Committee, a panel of leading experts in psychiatry, neuroscience, and mental illness. Each grant application is carefully reviewed for scientific merit, methodological soundness, and potential for impact. Only the most promising studies receive approval and funding, ensuring that every donor dollar supports research with the greatest potential to advance our understanding and treatment of mental illness.',
+    imageUrl: 'https://i.ibb.co/JJ6zYTm/3.png'
   },
   {
     id: 'investment',
@@ -33,7 +36,8 @@ const pathwaySteps: PathwayStep[] = [
     color: '#D4EDD1',
     hoverColor: '#D4EDD1',
     description: 'Your generous gifts fund seed grants',
-    details: 'Private donations to the Foundation of Hope provide the vital seed funding that brings approved research projects to life. These generous gifts from individuals, families, and organizations make it possible for scientists to begin their work and gather the preliminary data needed to pursue larger grants. This early investment ignites the research process, turning potential into progress and laying the foundation for future breakthroughs in the study and treatment of mental illness.'
+    details: 'Private donations to the Foundation of Hope provide the vital seed funding that brings approved research projects to life. These generous gifts from individuals, families, and organizations make it possible for scientists to begin their work and gather the preliminary data needed to pursue larger grants. This early investment ignites the research process, turning potential into progress and laying the foundation for future breakthroughs in the study and treatment of mental illness.',
+    imageUrl: 'https://i.ibb.co/35X3PFqF/4.png'
   },
   {
     id: 'research-action',
@@ -41,7 +45,8 @@ const pathwaySteps: PathwayStep[] = [
     color: '#4DB8D8',
     hoverColor: '#4DB8D8',
     description: 'Innovative studies begin',
-    details: 'Over a three-year period, researchers use Foundation of Hope seed funding to conduct studies that catalyze innovation in the understanding and treatment of mental illness. This early support allows researchers to generate critical preliminary data, proof of concept that strengthens their ability to compete for major external grants. Each study sets the stage for larger, more expansive research, multiplying the impact of every donor dollar and transforming a single seed grant into extraordinary scientific growth.'
+    details: 'Over a three-year period, researchers use Foundation of Hope seed funding to conduct studies that catalyze innovation in the understanding and treatment of mental illness. This early support allows researchers to generate critical preliminary data, proof of concept that strengthens their ability to compete for major external grants. Each study sets the stage for larger, more expansive research, multiplying the impact of every donor dollar and transforming a single seed grant into extraordinary scientific growth.',
+    imageUrl: 'https://i.ibb.co/3mXsk8Jk/5.png'
   },
   {
     id: 'major-expansion',
@@ -49,7 +54,8 @@ const pathwaySteps: PathwayStep[] = [
     color: '#E8F5E9',
     hoverColor: '#E8F5E9',
     description: 'Results attract NIH-level funding',
-    details: 'When Foundation of Hope–funded research yields strong preliminary results, researchers can compete for major federal grants from the National Institutes of Health (NIH), the National Institute of Mental Health (NIMH), and other leading organizations. This is where the multiplier effect takes hold: every dollar invested by the Foundation of Hope can generate up to $25 in additional federal funding on average. These new resources expand the scale and reach of the original study, accelerating progress toward more effective treatments for mental illness.'
+    details: 'When Foundation of Hope–funded research yields strong preliminary results, researchers can compete for major federal grants from the National Institutes of Health (NIH), the National Institute of Mental Health (NIMH), and other leading organizations. This is where the multiplier effect takes hold: every dollar invested by the Foundation of Hope can generate up to $25 in additional federal funding on average. These new resources expand the scale and reach of the original study, accelerating progress toward more effective treatments for mental illness.',
+    imageUrl: 'https://i.ibb.co/G4vJDYTY/6.png'
   },
   {
     id: 'breakthroughs',
@@ -57,7 +63,8 @@ const pathwaySteps: PathwayStep[] = [
     color: '#2D8B5F',
     hoverColor: '#2D8B5F',
     description: 'Discoveries that improve lives',
-    details: 'The ultimate goal is breakthrough discoveries that transform the understanding and treatment of mental illness. Foundation of Hope–funded research leads to new therapies, better diagnostic tools, and more effective prevention strategies. These advancements translate into real-world impact as individuals recover, families find hope, stigma decreases, and communities grow stronger. This is the lasting power of your investment in research.'
+    details: 'The ultimate goal is breakthrough discoveries that transform the understanding and treatment of mental illness. Foundation of Hope–funded research leads to new therapies, better diagnostic tools, and more effective prevention strategies. These advancements translate into real-world impact as individuals recover, families find hope, stigma decreases, and communities grow stronger. This is the lasting power of your investment in research.',
+    imageUrl: 'https://i.ibb.co/RpdjdsWG/7.png'
   }
 ];
 
@@ -110,6 +117,13 @@ export default function ResearchPathway() {
         ) : currentStep && (
           <>
             <div className="mb-6">
+              <div className="mb-6">
+                <img
+                  src={currentStep.imageUrl}
+                  alt={currentStep.title}
+                  className="w-full h-auto rounded-lg shadow-md mb-4"
+                />
+              </div>
               <div className="mb-4">
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-full ${badgeBg} flex items-center justify-center ${textColor} font-bold text-lg`}>
