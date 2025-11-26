@@ -115,31 +115,33 @@ export default function ResearchPathway() {
             </a>
           </div>
         ) : currentStep && (
-          <div className="flex flex-col md:flex-row gap-6 items-stretch">
-            <div className="md:w-1/3 flex-shrink-0">
-              <img
-                src={currentStep.imageUrl}
-                alt={currentStep.title}
-                className="w-full h-full object-cover rounded-lg shadow-md"
-              />
+          <div className="flex flex-col">
+            <div className="mb-6">
+              <div className="flex items-center gap-3 mb-3">
+                <div className={`w-10 h-10 rounded-full ${badgeBg} flex items-center justify-center ${textColor} font-bold text-lg`}>
+                  {currentIndex + 1}
+                </div>
+                <h3 className={`text-2xl md:text-3xl font-bold ${textColor}`}>
+                  {currentStep.title}
+                </h3>
+              </div>
+              <p className={`text-lg ${secondaryTextColor} italic font-medium`}>
+                {currentStep.description}
+              </p>
             </div>
 
-            <div className="md:w-2/3 flex flex-col">
-              <div className="mb-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className={`w-10 h-10 rounded-full ${badgeBg} flex items-center justify-center ${textColor} font-bold text-lg`}>
-                    {currentIndex + 1}
-                  </div>
-                  <h3 className={`text-2xl md:text-3xl font-bold ${textColor}`}>
-                    {currentStep.title}
-                  </h3>
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className="md:w-1/3 flex-shrink-0">
+                <div className="w-full h-64 flex items-center justify-center">
+                  <img
+                    src={currentStep.imageUrl}
+                    alt={currentStep.title}
+                    className="max-w-full max-h-full object-contain rounded-lg"
+                  />
                 </div>
-                <p className={`text-lg ${secondaryTextColor} italic font-medium`}>
-                  {currentStep.description}
-                </p>
               </div>
 
-              <div className="flex-1">
+              <div className="md:w-2/3 flex flex-col">
                 <p className={`text-base ${secondaryTextColor} leading-relaxed`}>
                   {currentStep.details}
                 </p>
