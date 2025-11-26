@@ -162,45 +162,33 @@ export default function ResearchPathway() {
           onClick={() => setSelectedStep(null)}
         >
           <div
-            className="relative rounded-2xl shadow-2xl p-8 md:p-12 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+            className="relative rounded-xl shadow-2xl p-6 max-w-2xl w-full"
             style={{ backgroundColor: selectedStep.color }}
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setSelectedStep(null)}
-              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
               aria-label="Close"
             >
-              <X className={`w-6 h-6 ${isLightBackground(pathwaySteps.indexOf(selectedStep)) ? 'text-gray-900' : 'text-white'}`} />
+              <X className={`w-5 h-5 ${isLightBackground(pathwaySteps.indexOf(selectedStep)) ? 'text-gray-900' : 'text-white'}`} />
             </button>
 
-            <div className="flex flex-col md:flex-row gap-8">
-              <div className="md:w-1/2 flex flex-col justify-start text-left">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className={`w-10 h-10 rounded-full ${isLightBackground(pathwaySteps.indexOf(selectedStep)) ? 'bg-gray-900/10' : 'bg-white/20'} flex items-center justify-center ${isLightBackground(pathwaySteps.indexOf(selectedStep)) ? 'text-gray-900' : 'text-white'} font-bold text-lg`}>
-                    {pathwaySteps.indexOf(selectedStep) + 1}
-                  </div>
-                  <h3 className={`text-2xl md:text-3xl font-bold ${isLightBackground(pathwaySteps.indexOf(selectedStep)) ? 'text-gray-900' : 'text-white'}`}>
-                    {selectedStep.title}
-                  </h3>
+            <div className="flex flex-col text-left pr-8">
+              <div className="flex items-center gap-3 mb-3">
+                <div className={`w-8 h-8 rounded-full ${isLightBackground(pathwaySteps.indexOf(selectedStep)) ? 'bg-gray-900/10' : 'bg-white/20'} flex items-center justify-center ${isLightBackground(pathwaySteps.indexOf(selectedStep)) ? 'text-gray-900' : 'text-white'} font-bold text-sm`}>
+                  {pathwaySteps.indexOf(selectedStep) + 1}
                 </div>
-                <p className={`text-lg ${isLightBackground(pathwaySteps.indexOf(selectedStep)) ? 'text-gray-700' : 'text-white/90'} italic font-medium mb-6`}>
-                  {selectedStep.description}
-                </p>
-                <p className={`text-base ${isLightBackground(pathwaySteps.indexOf(selectedStep)) ? 'text-gray-700' : 'text-white/90'} leading-relaxed`}>
-                  {selectedStep.details}
-                </p>
+                <h3 className={`text-xl md:text-2xl font-bold ${isLightBackground(pathwaySteps.indexOf(selectedStep)) ? 'text-gray-900' : 'text-white'}`}>
+                  {selectedStep.title}
+                </h3>
               </div>
-
-              <div className="md:w-1/2 flex-shrink-0">
-                <div className="w-full h-[40rem] flex items-center justify-center">
-                  <img
-                    src={selectedStep.imageUrl}
-                    alt={selectedStep.title}
-                    className="max-w-full max-h-full object-contain rounded-lg"
-                  />
-                </div>
-              </div>
+              <p className={`text-base ${isLightBackground(pathwaySteps.indexOf(selectedStep)) ? 'text-gray-700' : 'text-white/90'} italic font-medium mb-4`}>
+                {selectedStep.description}
+              </p>
+              <p className={`text-sm ${isLightBackground(pathwaySteps.indexOf(selectedStep)) ? 'text-gray-700' : 'text-white/90'} leading-relaxed`}>
+                {selectedStep.details}
+              </p>
             </div>
           </div>
         </div>
