@@ -19,7 +19,7 @@ const pathwaySteps: PathwayStep[] = [
     hoverColor: '#B8E6F0',
     description: 'Researchers propose bold new studies',
     details: 'The research pathway begins with innovative ideas from talented researchers who apply for Foundation of Hope seed grants to explore new ways of understanding and treating mental illness. These bold proposals reflect fresh thinking and novel approaches that have the potential to transform mental illness care. Through this competitive grant process, the Foundation of Hope provides critical early funding that helps visionary scientists and researchers turn promising ideas into actionable research.',
-    imageUrl: 'https://i.ibb.co/k2JVCVNg/Your-gift-is-hope-in-action.png'
+    imageUrl: 'https://i.ibb.co/N2SqXBg6/I-will-stand-against-my-own-depression-You-ve-helped-me-more-than-anyone-will-ever-know-Marc-s-Forme.png'
   },
   {
     id: 'scientific-review',
@@ -132,7 +132,7 @@ export default function ResearchPathway() {
 
             <div className="flex flex-col md:flex-row gap-6">
               <div className="md:w-1/3 flex-shrink-0">
-                <div className="w-full h-64 flex items-center justify-center">
+                <div className="w-full h-80 flex items-center justify-center">
                   <img
                     src={currentStep.imageUrl}
                     alt={currentStep.title}
