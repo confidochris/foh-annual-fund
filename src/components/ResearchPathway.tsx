@@ -117,11 +117,11 @@ export default function ResearchPathway() {
         ) : currentStep && (
           <>
             <div className="mb-6">
-              <div className="mb-6">
+              <div className="mb-6 flex justify-center">
                 <img
                   src={currentStep.imageUrl}
                   alt={currentStep.title}
-                  className="w-full h-auto rounded-lg shadow-md mb-4"
+                  className="max-w-sm h-auto rounded-lg shadow-md"
                 />
               </div>
               <div className="mb-4">
