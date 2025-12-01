@@ -95,6 +95,56 @@ Deno.serve(async (req: Request) => {
             source: 'stripe-webhook',
           });
 
+        (async () => {
+          try {
+            const donor = donation.donors;
+            const webhookPayload = {
+              donation_id: donationId,
+              donor_name: donor ? `${donor.first_name} ${donor.last_name}`.trim() : '',
+              donor_email: donor?.email || '',
+              amount: donation.amount,
+              donation_date: new Date().toISOString().split('T')[0],
+              donor_address: '',
+              donor_city: '',
+              donor_state: '',
+              donor_zip: '',
+              donor_phone: '',
+              approach: '',
+              note: ''
+            };
+
+            console.log('Calling external webhook:', webhookPayload);
+
+            const webhookResponse = await fetch(
+              'https://mwyerkvkotocswabrkpi.supabase.co/functions/v1/donation-webhook',
+              {
+                method: 'POST',
+                headers: {
+                  'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13eWVya3Zrb3RvY3N3YWJya3BpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5OTQyNTUsImV4cCI6MjA3OTU3MDI1NX0.8-XUN24ejSZIFSJBuMWMsfdYd8g5-pNYJVm3KNWS42Y',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(webhookPayload),
+              }
+            );
+
+            if (webhookResponse.ok) {
+              console.log('External webhook called successfully');
+              await supabase
+                .from('donation_events')
+                .insert({
+                  donation_id: donationId,
+                  event_type: 'webhook_sent',
+                  event_data: { webhook_payload: webhookPayload },
+                  source: 'stripe-webhook',
+                });
+            } else {
+              console.error('External webhook failed:', await webhookResponse.text());
+            }
+          } catch (webhookError) {
+            console.error('Exception calling external webhook:', webhookError);
+          }
+        })();
+
         if (donation.donors && donation.donors.email) {
           const donor = donation.donors;
           const isRecurring = donation.donation_type === 'recurring';
@@ -131,13 +181,13 @@ Deno.serve(async (req: Request) => {
 
             if (emailResponse.error || !response.ok) {
               console.error('Resend returned error:', emailResponse.error || emailResponse);
-              
+
               await supabase
                 .from('donation_events')
                 .insert({
                   donation_id: donationId,
                   event_type: 'email_failed',
-                  event_data: { 
+                  event_data: {
                     error: emailResponse.error || emailResponse,
                     email: donor.email,
                     template_id: templateId
@@ -152,8 +202,8 @@ Deno.serve(async (req: Request) => {
                 .insert({
                   donation_id: donationId,
                   event_type: 'email_sent',
-                  event_data: { 
-                    email: donor.email, 
+                  event_data: {
+                    email: donor.email,
                     type: isRecurring ? 'recurring' : 'one_time',
                     provider: 'resend',
                     template_id: templateId,
@@ -165,13 +215,13 @@ Deno.serve(async (req: Request) => {
           } catch (emailError) {
             console.error('Exception sending email:', emailError);
             console.error('Error details:', JSON.stringify(emailError, null, 2));
-            
+
             await supabase
               .from('donation_events')
               .insert({
                 donation_id: donationId,
                 event_type: 'email_failed',
-                event_data: { 
+                event_data: {
                   error: emailError.message || String(emailError),
                   email: donor.email,
                   template_id: templateId
