@@ -516,7 +516,7 @@ export default function AdminDonations() {
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-2 text-sm text-gray-700">
                             <CreditCard className="w-4 h-4 text-gray-400" />
-                            {donation.donation_type === 'one_time' || donation.donation_type === 'recurring' ? 'Stripe' : 'Offline'}
+                            {donation.metadata?.is_offline ? 'Offline' : 'Stripe'}
                           </div>
                         </td>
                       </tr>
