@@ -37,7 +37,7 @@ Deno.serve(async (req: Request) => {
 
     const { data: recentDonations, error: recentError } = await supabase
       .from("donations")
-      .select("*")
+      .select("amount, created_at, donor_id, donors(first_name, last_name)")
       .gte("created_at", twentyFourHoursAgo.toISOString());
 
     if (recentError) {
@@ -53,25 +53,27 @@ Deno.serve(async (req: Request) => {
     }
 
     const newGifts = recentDonations?.length || 0;
-    const totalAmount = recentDonations?.reduce((sum, d) => sum + (d.amount || 0), 0) || 0;
-    const runningTotal = allDonations?.reduce((sum, d) => sum + (d.amount || 0), 0) || 0;
+    const totalAmount = recentDonations?.reduce((sum, d) => sum + (parseFloat(d.amount) || 0), 0) || 0;
+    const runningTotal = allDonations?.reduce((sum, d) => sum + (parseFloat(d.amount) || 0), 0) || 0;
 
     const majorDonors = recentDonations
-      ?.filter(d => d.amount >= 500)
-      .map(d => `${d.first_name} ${d.last_name} - $${d.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`)
+      ?.filter(d => parseFloat(d.amount) >= 500)
+      .map(d => {
+        const donor = d.donors;
+        const firstName = donor?.first_name || "Anonymous";
+        const lastName = donor?.last_name || "";
+        return `${firstName} ${lastName} - $${parseFloat(d.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      })
       .join("<br>") || "None";
 
     const emailData = {
       from: "donations@walkforhope.com",
       to: RECIPIENT_EMAILS,
-      subject: "Your Daily Annual Fund Donation Snack",
-      template_id: TEMPLATE_ID,
-      template_data: {
-        new_gifts: newGifts.toString(),
-        total_amount: `$${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-        running_total: `$${runningTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-        MAJOR_DONORS: majorDonors
-      }
+      react: TEMPLATE_ID,
+      new_gifts: newGifts.toString(),
+      total_amount: `$${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      running_total: `$${runningTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      MAJOR_DONORS: majorDonors
     };
 
     const resendResponse = await fetch("https://api.resend.com/emails", {
@@ -98,7 +100,7 @@ Deno.serve(async (req: Request) => {
           new_gifts: newGifts,
           total_amount: totalAmount,
           running_total: runningTotal,
-          major_donors_count: recentDonations?.filter(d => d.amount >= 500).length || 0
+          major_donors_count: recentDonations?.filter(d => parseFloat(d.amount) >= 500).length || 0
         },
         resend_response: result
       }),
