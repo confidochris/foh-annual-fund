@@ -67,13 +67,17 @@ Deno.serve(async (req: Request) => {
       .join("<br>") || "None";
 
     const emailData = {
-      from: "donations@walkforhope.com",
+      from: "Foundation of Hope <donations@walkforhope.com>",
       to: RECIPIENT_EMAILS,
-      react: TEMPLATE_ID,
-      new_gifts: newGifts.toString(),
-      total_amount: `$${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-      running_total: `$${runningTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-      MAJOR_DONORS: majorDonors
+      template: {
+        id: TEMPLATE_ID,
+        variables: {
+          new_gifts: newGifts.toString(),
+          total_amount: `$${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+          running_total: `$${runningTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+          MAJOR_DONORS: majorDonors
+        }
+      }
     };
 
     const resendResponse = await fetch("https://api.resend.com/emails", {
