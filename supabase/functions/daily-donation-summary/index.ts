@@ -38,6 +38,7 @@ Deno.serve(async (req: Request) => {
     const { data: recentDonations, error: recentError } = await supabase
       .from("donations")
       .select("amount, created_at, donor_id, donors(first_name, last_name)")
+      .eq("status", "completed")
       .gte("created_at", twentyFourHoursAgo.toISOString());
 
     if (recentError) {
@@ -46,7 +47,8 @@ Deno.serve(async (req: Request) => {
 
     const { data: allDonations, error: allError } = await supabase
       .from("donations")
-      .select("amount");
+      .select("amount")
+      .eq("status", "completed");
 
     if (allError) {
       throw new Error(`Failed to fetch all donations: ${allError.message}`);
