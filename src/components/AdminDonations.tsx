@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { DollarSign, Plus, AlertCircle, CheckCircle, Download, Search, Calendar, CreditCard, User, RefreshCw, Trash2 } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { DollarSign, Plus, AlertCircle, CheckCircle, Download, Search, Calendar, CreditCard, User, RefreshCw, Trash2, BarChart3, List, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import DonationAnalytics from './DonationAnalytics';
 
@@ -62,6 +62,12 @@ export default function AdminDonations() {
   const [selectedDonor, setSelectedDonor] = useState<DonorDetails | null>(null);
   const [deletingDonation, setDeletingDonation] = useState<Donation | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
+
+  const analyticsRef = useRef<HTMLDivElement>(null);
+  const donationsRef = useRef<HTMLDivElement>(null);
+  const addDonationRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -79,6 +85,10 @@ export default function AdminDonations() {
       };
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, statusFilter, typeFilter, dateFrom, dateTo]);
 
   const fetchDonations = async (isManualRefresh = false) => {
     try {
@@ -254,6 +264,15 @@ export default function AdminDonations() {
 
   const totalRaised = filteredDonations.filter(d => d.status === 'completed').reduce((sum, d) => sum + parseFloat(d.amount), 0);
 
+  const totalPages = Math.ceil(filteredDonations.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedDonations = filteredDonations.slice(startIndex, endIndex);
+
+  const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
+    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   const exportToCSV = () => {
     const headers = [
       'Date',
@@ -366,9 +385,40 @@ export default function AdminDonations() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-foh-lime/5 to-white py-12 px-4">
       <div className="max-w-7xl mx-auto space-y-8">
-        <DonationAnalytics donations={donations} />
+        <div className="text-center mb-8">
+          <h1 className="text-4xl md:text-5xl font-bold text-foh-dark-brown mb-4">
+            Annual Fund Admin Portal
+          </h1>
+          <div className="flex flex-wrap justify-center gap-4 mt-6">
+            <button
+              onClick={() => scrollToSection(analyticsRef)}
+              className="flex items-center gap-2 px-6 py-3 bg-white rounded-lg shadow-md hover:shadow-lg transition-all border-2 border-foh-mid-green/20 hover:border-foh-mid-green"
+            >
+              <BarChart3 className="w-5 h-5 text-foh-mid-green" />
+              <span className="font-semibold text-foh-dark-brown">Analytics</span>
+            </button>
+            <button
+              onClick={() => scrollToSection(donationsRef)}
+              className="flex items-center gap-2 px-6 py-3 bg-white rounded-lg shadow-md hover:shadow-lg transition-all border-2 border-foh-blue/20 hover:border-foh-blue"
+            >
+              <List className="w-5 h-5 text-foh-blue" />
+              <span className="font-semibold text-foh-dark-brown">All Donations</span>
+            </button>
+            <button
+              onClick={() => scrollToSection(addDonationRef)}
+              className="flex items-center gap-2 px-6 py-3 bg-white rounded-lg shadow-md hover:shadow-lg transition-all border-2 border-foh-light-green/20 hover:border-foh-light-green"
+            >
+              <Plus className="w-5 h-5 text-foh-light-green" />
+              <span className="font-semibold text-foh-dark-brown">Add Donation</span>
+            </button>
+          </div>
+        </div>
 
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div ref={analyticsRef}>
+          <DonationAnalytics donations={donations} />
+        </div>
+
+        <div ref={donationsRef} className="bg-white rounded-2xl shadow-xl p-8">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-2xl font-bold text-foh-dark-brown mb-1">All Donations</h2>
@@ -502,7 +552,7 @@ export default function AdminDonations() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredDonations.map((donation) => {
+                  {paginatedDonations.map((donation) => {
                     const donorName = donation.donors
                       ? `${donation.donors.first_name} ${donation.donors.last_name}`
                       : 'Anonymous';
@@ -586,9 +636,50 @@ export default function AdminDonations() {
               </table>
             </div>
           )}
+
+          {filteredDonations.length > itemsPerPage && (
+            <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-200">
+              <div className="text-sm text-gray-600">
+                Showing {startIndex + 1} to {Math.min(endIndex, filteredDonations.length)} of {filteredDonations.length} donations
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  className="flex items-center gap-1 px-4 py-2 bg-white border border-gray-300 rounded-lg font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Previous
+                </button>
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`w-10 h-10 rounded-lg font-semibold transition-colors ${
+                        currentPage === page
+                          ? 'bg-foh-mid-green text-white'
+                          : 'bg-white border border-gray-300 hover:bg-gray-50 text-gray-700'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                  className="flex items-center gap-1 px-4 py-2 bg-white border border-gray-300 rounded-lg font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Next
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div ref={addDonationRef} className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-foh-light-green/10 rounded-full mb-4">
               <Plus className="w-8 h-8 text-foh-mid-green" />
