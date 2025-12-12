@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DollarSign, Plus, AlertCircle, CheckCircle, Download, Search, Calendar, CreditCard, User, RefreshCw } from 'lucide-react';
+import { DollarSign, Plus, AlertCircle, CheckCircle, Download, Search, Calendar, CreditCard, User, RefreshCw, Trash2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface Donation {
@@ -59,6 +59,8 @@ export default function AdminDonations() {
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [selectedDonor, setSelectedDonor] = useState<DonorDetails | null>(null);
+  const [deletingDonation, setDeletingDonation] = useState<Donation | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -122,6 +124,49 @@ export default function AdminDonations() {
 
   const handleManualRefresh = () => {
     fetchDonations(true);
+  };
+
+  const handleDeleteClick = (donation: Donation) => {
+    setDeletingDonation(donation);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deletingDonation) return;
+
+    setIsDeleting(true);
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/delete-donation`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({
+            donationId: deletingDonation.id,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage({ type: 'success', text: `Successfully deleted donation of $${deletingDonation.amount}` });
+        setDeletingDonation(null);
+        fetchDonations();
+      } else {
+        setMessage({ type: 'error', text: data.error || 'Failed to delete donation' });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to delete donation. Please try again.' });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setDeletingDonation(null);
   };
 
   const handleAuth = (e: React.FormEvent) => {
@@ -450,6 +495,7 @@ export default function AdminDonations() {
                     <th className="text-left py-3 px-4 font-semibold text-foh-dark-brown">Type</th>
                     <th className="text-left py-3 px-4 font-semibold text-foh-dark-brown">Status</th>
                     <th className="text-left py-3 px-4 font-semibold text-foh-dark-brown">Method</th>
+                    <th className="text-left py-3 px-4 font-semibold text-foh-dark-brown">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -518,6 +564,17 @@ export default function AdminDonations() {
                             <CreditCard className="w-4 h-4 text-gray-400" />
                             {donation.metadata?.is_offline ? 'Offline' : 'Stripe'}
                           </div>
+                        </td>
+                        <td className="py-3 px-4">
+                          {(donation.metadata?.is_offline || donation.status === 'pending') && (
+                            <button
+                              onClick={() => handleDeleteClick(donation)}
+                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                              title="Delete donation"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
                         </td>
                       </tr>
                     );
@@ -731,6 +788,83 @@ export default function AdminDonations() {
                     </div>
                   </div>
                 )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {deletingDonation && (
+          <div
+            className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+            onClick={handleCancelDelete}
+          >
+            <div
+              className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-center mb-6">
+                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                  <AlertCircle className="w-8 h-8 text-red-600" />
+                </div>
+              </div>
+
+              <h3 className="text-2xl font-bold text-foh-dark-brown mb-2 text-center">Delete Donation?</h3>
+              <p className="text-gray-600 text-center mb-6">
+                Are you sure you want to permanently delete this donation? This action cannot be undone.
+              </p>
+
+              <div className="bg-gray-50 rounded-lg p-4 mb-6 space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Amount:</span>
+                  <span className="font-bold text-foh-dark-brown">${parseFloat(deletingDonation.amount).toLocaleString()}</span>
+                </div>
+                {deletingDonation.donors && (
+                  <div className="flex justify-between">
+                    <span className="text-sm text-gray-600">Donor:</span>
+                    <span className="font-medium text-foh-dark-brown">
+                      {deletingDonation.donors.first_name} {deletingDonation.donors.last_name}
+                    </span>
+                  </div>
+                )}
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Method:</span>
+                  <span className="text-sm text-gray-700">
+                    {deletingDonation.metadata?.is_offline ? 'Offline' : 'Stripe'}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Date:</span>
+                  <span className="text-sm text-gray-700">
+                    {new Date(deletingDonation.created_at).toLocaleDateString()}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={handleCancelDelete}
+                  disabled={isDeleting}
+                  className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleConfirmDelete}
+                  disabled={isDeleting}
+                  className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {isDeleting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="w-4 h-4" />
+                      Delete
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           </div>
