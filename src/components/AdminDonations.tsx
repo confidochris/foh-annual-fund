@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { DollarSign, Plus, AlertCircle, CheckCircle, Download, Search, Calendar, CreditCard, User, RefreshCw, Trash2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import DonationAnalytics from './DonationAnalytics';
 
 interface Donation {
   id: string;
@@ -365,6 +366,8 @@ export default function AdminDonations() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-foh-lime/5 to-white py-12 px-4">
       <div className="max-w-7xl mx-auto space-y-8">
+        <DonationAnalytics donations={donations} />
+
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="flex items-center justify-between mb-6">
             <div>
