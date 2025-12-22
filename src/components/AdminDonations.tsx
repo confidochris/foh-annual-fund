@@ -57,6 +57,7 @@ export default function AdminDonations() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('completed');
   const [typeFilter, setTypeFilter] = useState<string>('all');
+  const [sourceFilter, setSourceFilter] = useState<string>('all');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [selectedDonor, setSelectedDonor] = useState<DonorDetails | null>(null);
@@ -88,7 +89,7 @@ export default function AdminDonations() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, statusFilter, typeFilter, dateFrom, dateTo]);
+  }, [searchQuery, statusFilter, typeFilter, sourceFilter, dateFrom, dateTo]);
 
   const fetchDonations = async (isManualRefresh = false) => {
     try {
@@ -255,11 +256,16 @@ export default function AdminDonations() {
     const matchesStatus = statusFilter === 'all' || donation.status === statusFilter;
     const matchesType = typeFilter === 'all' || donation.donation_type === typeFilter;
 
+    const isOffline = donation.metadata?.is_offline || false;
+    const matchesSource = sourceFilter === 'all' ||
+      (sourceFilter === 'stripe' && !isOffline) ||
+      (sourceFilter === 'offline' && isOffline);
+
     const donationDate = new Date(donation.created_at);
     const matchesDateFrom = !dateFrom || donationDate >= new Date(dateFrom);
     const matchesDateTo = !dateTo || donationDate <= new Date(dateTo + 'T23:59:59');
 
-    return matchesSearch && matchesStatus && matchesType && matchesDateFrom && matchesDateTo;
+    return matchesSearch && matchesStatus && matchesType && matchesSource && matchesDateFrom && matchesDateTo;
   });
 
   const totalRaised = filteredDonations.filter(d => d.status === 'completed').reduce((sum, d) => sum + parseFloat(d.amount), 0);
@@ -453,8 +459,8 @@ export default function AdminDonations() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
-            <div className="relative">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
+            <div className="relative xl:col-span-2">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
@@ -484,6 +490,16 @@ export default function AdminDonations() {
               <option value="all">All Types</option>
               <option value="one_time">One-Time</option>
               <option value="recurring">Recurring</option>
+            </select>
+
+            <select
+              value={sourceFilter}
+              onChange={(e) => setSourceFilter(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-foh-mid-green focus:border-transparent outline-none bg-white"
+            >
+              <option value="all">All Sources</option>
+              <option value="stripe">Stripe</option>
+              <option value="offline">Offline</option>
             </select>
 
             <input
