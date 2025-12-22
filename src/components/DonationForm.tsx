@@ -29,10 +29,10 @@ export default function DonationForm() {
   });
 
   const donationTiers = [
-    { amount: 50, impact: 'Helps light the spark of discovery' },
-    { amount: 150, impact: 'Fuels the work that turns questions into answers' },
-    { amount: 500, impact: 'Supports exploring bold new solutions' },
-    { amount: 1000, impact: 'Moves us closer to breakthroughs' },
+    { amount: 25, impact: 'Helps light the spark of discovery' },
+    { amount: 50, impact: 'Fuels the work that turns questions into answers' },
+    { amount: 250, impact: 'Supports exploring bold new solutions' },
+    { amount: 500, impact: 'Moves us closer to breakthroughs' },
   ];
 
   const referralOptions = [
