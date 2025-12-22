@@ -89,11 +89,22 @@ export default function DonationAnalytics({ donations }: DonationAnalyticsProps)
   const totals = useMemo(() => {
     const stripeTotal = chartData.reduce((sum, day) => sum + day.stripe, 0);
     const offlineTotal = chartData.reduce((sum, day) => sum + day.offline, 0);
-    const total = stripeTotal + offlineTotal;
 
     const stripeCount = chartData.reduce((sum, day) => sum + day.stripeCount, 0);
     const offlineCount = chartData.reduce((sum, day) => sum + day.offlineCount, 0);
-    const count = stripeCount + offlineCount;
+
+    let total, count;
+
+    if (sourceFilter === 'stripe') {
+      total = stripeTotal;
+      count = stripeCount;
+    } else if (sourceFilter === 'offline') {
+      total = offlineTotal;
+      count = offlineCount;
+    } else {
+      total = stripeTotal + offlineTotal;
+      count = stripeCount + offlineCount;
+    }
 
     const avgPerDay = chartData.length > 0 ? total / chartData.length : 0;
     const avgPerDonation = count > 0 ? total / count : 0;
@@ -109,7 +120,7 @@ export default function DonationAnalytics({ donations }: DonationAnalyticsProps)
       avgPerDonation: Math.round(avgPerDonation * 100) / 100,
       days: chartData.length
     };
-  }, [chartData]);
+  }, [chartData, sourceFilter]);
 
   const handleReset = () => {
     setStartDate(firstDonationDate);
