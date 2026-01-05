@@ -127,7 +127,7 @@ export default function Hero() {
                 </div>
                 <div className="flex justify-between items-center text-xs text-gray-600">
                   <span className="font-semibold text-foh-mid-green">
-                    {isLoadingProgress ? '...' : `$${currentAmount.toLocaleString()}`}
+                    {isLoadingProgress ? '...' : `$${Math.ceil(currentAmount).toLocaleString()}`}
                   </span>
                   <span>{progressPercentage.toFixed(0)}%</span>
                 </div>
